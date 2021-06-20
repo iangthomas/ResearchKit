@@ -110,7 +110,7 @@
     _environmentSPLMeterContentView.ringView.delegate = self;
     self.activeStepView.activeCustomView = _environmentSPLMeterContentView;
     self.activeStepView.customContentFillsAvailableSpace = YES;
-    [self requestMicrophoneAuthorization];
+//    [self requestMicrophoneAuthorization];
     [self configureAudioSession];
     _audioEngine = [[AVAudioEngine alloc] init];
     _eqUnit = [[AVAudioUnitEQ alloc] initWithNumberOfBands:6];
@@ -194,9 +194,9 @@
     return sResult;
 }
 
-- (void)requestMicrophoneAuthorization {
-    [[AVAudioSession sharedInstance] recordPermission];
-}
+//- (void)requestMicrophoneAuthorization {
+//    [[AVAudioSession sharedInstance] recordPermission];
+//}
 
 - (void)configureAudioSession {
     NSError *error = nil;

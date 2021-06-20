@@ -204,60 +204,60 @@ typedef NS_OPTIONS (NSInteger, SampleDataType) {
 };
 
 
-- (BOOL)insertSampleDataWithType:(SampleDataType)sampleDataType
-                       startDate:(NSDate *)startDate
-                         endDate:(NSDate *)endDate {
-    _healthStore = [[HKHealthStore alloc] init];
-    
-    HKQuantityType *heartRateType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
-    HKQuantityType *diastolicType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBloodPressureDiastolic];
-    HKQuantityType *systolicType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBloodPressureSystolic];
-    
-    HKAuthorizationStatus heartRateTypeStatus = [_healthStore authorizationStatusForType:heartRateType];
-    HKAuthorizationStatus diastolicTypeStatus = [_healthStore authorizationStatusForType:diastolicType];
-    HKAuthorizationStatus systolicTypeStatus = [_healthStore authorizationStatusForType:systolicType];
-    
-    BOOL authorized = (heartRateTypeStatus == HKAuthorizationStatusSharingAuthorized
-                       && diastolicTypeStatus == HKAuthorizationStatusSharingAuthorized
-                       && systolicTypeStatus == HKAuthorizationStatusSharingAuthorized);
-    
-    if (authorized) {
-        
-#if TARGET_OS_SIMULATOR
-        
-        // Heart Rate
-        HKUnit *hrUnit = [[HKUnit countUnit] unitDividedByUnit:[HKUnit minuteUnit]];
-        HKQuantity* quantity = [HKQuantity quantityWithUnit:hrUnit doubleValue:(NSInteger)([NSDate date].timeIntervalSinceReferenceDate)%100];
-        HKQuantitySample *heartRateSample = [HKQuantitySample quantitySampleWithType:heartRateType quantity:quantity startDate:startDate endDate:endDate];
-        
-        NSString *identifier = HKCorrelationTypeIdentifierBloodPressure;
-        HKUnit *bpUnit = [HKUnit unitFromString:@"mmHg"];
-        
-        // Blood Presure
-        HKQuantitySample *diastolicPressure = [HKQuantitySample quantitySampleWithType:diastolicType quantity:[HKQuantity quantityWithUnit:bpUnit doubleValue:70] startDate:startDate endDate:endDate];
-        HKQuantitySample *systolicPressure = [HKQuantitySample quantitySampleWithType:systolicType quantity:[HKQuantity quantityWithUnit:bpUnit doubleValue:110] startDate:startDate endDate:endDate];
-        
-        HKCorrelation *bloodPressureCorrelation = [HKCorrelation correlationWithType:[HKCorrelationType correlationTypeForIdentifier:identifier] startDate:startDate endDate:endDate objects:[NSSet setWithObjects:diastolicPressure, systolicPressure, nil]];
-        
-        NSMutableArray *objects = [NSMutableArray new];
-        if (sampleDataType & SampleDataTypeHR) {
-            [objects addObject:heartRateSample];
-        }
-        if (sampleDataType & SampleDataTypeBP) {
-            [objects addObject:bloodPressureCorrelation];
-        }
-        
-        [_healthStore saveObjects:objects withCompletion:^(BOOL success, NSError * _Nullable error) {
-            NSLog(@"HK sample saving = %@, error = %@", success ? @"success" : @"failed", error);
-        }];
-
-#endif
-    } else {
-        NSLog(@"HKHealthStore access has not been authorized.");
-    }
-
-    return authorized;
-}
+//- (BOOL)insertSampleDataWithType:(SampleDataType)sampleDataType
+//                       startDate:(NSDate *)startDate
+//                         endDate:(NSDate *)endDate {
+//    _healthStore = [[HKHealthStore alloc] init];
+//
+//    HKQuantityType *heartRateType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
+//    HKQuantityType *diastolicType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBloodPressureDiastolic];
+//    HKQuantityType *systolicType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBloodPressureSystolic];
+//
+//    HKAuthorizationStatus heartRateTypeStatus = [_healthStore authorizationStatusForType:heartRateType];
+//    HKAuthorizationStatus diastolicTypeStatus = [_healthStore authorizationStatusForType:diastolicType];
+//    HKAuthorizationStatus systolicTypeStatus = [_healthStore authorizationStatusForType:systolicType];
+//
+//    BOOL authorized = (heartRateTypeStatus == HKAuthorizationStatusSharingAuthorized
+//                       && diastolicTypeStatus == HKAuthorizationStatusSharingAuthorized
+//                       && systolicTypeStatus == HKAuthorizationStatusSharingAuthorized);
+//
+//    if (authorized) {
+//
+//#if TARGET_OS_SIMULATOR
+//
+//        // Heart Rate
+//        HKUnit *hrUnit = [[HKUnit countUnit] unitDividedByUnit:[HKUnit minuteUnit]];
+//        HKQuantity* quantity = [HKQuantity quantityWithUnit:hrUnit doubleValue:(NSInteger)([NSDate date].timeIntervalSinceReferenceDate)%100];
+//        HKQuantitySample *heartRateSample = [HKQuantitySample quantitySampleWithType:heartRateType quantity:quantity startDate:startDate endDate:endDate];
+//
+//        NSString *identifier = HKCorrelationTypeIdentifierBloodPressure;
+//        HKUnit *bpUnit = [HKUnit unitFromString:@"mmHg"];
+//
+//        // Blood Presure
+//        HKQuantitySample *diastolicPressure = [HKQuantitySample quantitySampleWithType:diastolicType quantity:[HKQuantity quantityWithUnit:bpUnit doubleValue:70] startDate:startDate endDate:endDate];
+//        HKQuantitySample *systolicPressure = [HKQuantitySample quantitySampleWithType:systolicType quantity:[HKQuantity quantityWithUnit:bpUnit doubleValue:110] startDate:startDate endDate:endDate];
+//
+//        HKCorrelation *bloodPressureCorrelation = [HKCorrelation correlationWithType:[HKCorrelationType correlationTypeForIdentifier:identifier] startDate:startDate endDate:endDate objects:[NSSet setWithObjects:diastolicPressure, systolicPressure, nil]];
+//
+//        NSMutableArray *objects = [NSMutableArray new];
+//        if (sampleDataType & SampleDataTypeHR) {
+//            [objects addObject:heartRateSample];
+//        }
+//        if (sampleDataType & SampleDataTypeBP) {
+//            [objects addObject:bloodPressureCorrelation];
+//        }
+//
+//        [_healthStore saveObjects:objects withCompletion:^(BOOL success, NSError * _Nullable error) {
+//            NSLog(@"HK sample saving = %@, error = %@", success ? @"success" : @"failed", error);
+//        }];
+//
+//#endif
+//    } else {
+//        NSLog(@"HKHealthStore access has not been authorized.");
+//    }
+//
+//    return authorized;
+//}
 
 - (void)testDataCollection {
     

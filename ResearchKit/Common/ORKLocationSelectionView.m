@@ -276,20 +276,20 @@ static const NSString *FormattedAddressLines = @"FormattedAddressLines";
     }
 }
 
-- (void)loadCurrentLocationIfNecessary {
-    if (_useCurrentLocation) {
-        CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-        
-        if (status == kCLAuthorizationStatusAuthorizedAlways || status == kCLAuthorizationStatusAuthorizedWhenInUse) {
-            _userLocationNeedsUpdate = YES;
-            _mapView.showsUserLocation = YES;
-        } else {
-            _locationManager = [[CLLocationManager alloc] init];
-            _locationManager.delegate = self;
-            [_locationManager requestWhenInUseAuthorization];
-        }
-    }
-}
+//- (void)loadCurrentLocationIfNecessary {
+//    if (_useCurrentLocation) {
+//        CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+//
+//        if (status == kCLAuthorizationStatusAuthorizedAlways || status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+//            _userLocationNeedsUpdate = YES;
+//            _mapView.showsUserLocation = YES;
+//        } else {
+//            _locationManager = [[CLLocationManager alloc] init];
+//            _locationManager.delegate = self;
+//            [_locationManager requestWhenInUseAuthorization];
+//        }
+//    }
+//}
 
 - (void)geocodeAndDisplay:(NSString *)string {
     
@@ -348,7 +348,7 @@ static const NSString *FormattedAddressLines = @"FormattedAddressLines";
     if (_answer) {
         _userLocationNeedsUpdate = NO;
     } else {
-         [self loadCurrentLocationIfNecessary];
+//         [self loadCurrentLocationIfNecessary];
     }
     
     ORKLocation *location = isAnswerClassORKLocation ? (ORKLocation *)_answer : nil;
@@ -433,11 +433,11 @@ static const NSString *FormattedAddressLines = @"FormattedAddressLines";
 
 # pragma mark CLLocationManagerDelegate
 
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    if (status == kCLAuthorizationStatusAuthorizedAlways || status == kCLAuthorizationStatusAuthorizedWhenInUse) {
-        [self loadCurrentLocationIfNecessary];
-    }
-}
+//- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+//    if (status == kCLAuthorizationStatusAuthorizedAlways || status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+//        [self loadCurrentLocationIfNecessary];
+//    }
+//}
 
 #pragma mark MKMapViewDelegate
 

@@ -55,69 +55,69 @@
 }
 
 + (void)requestAuthorization {
-    
-    [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
-        switch (status) {
-            case SFSpeechRecognizerAuthorizationStatusAuthorized:
-                ORK_Log_Debug("Speech recognition request was authorized");
-                break;
-            default:
-                // User did not authorize speech recognition
-                break;
-        }
-    }];
+//
+//    [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+//        switch (status) {
+//            case SFSpeechRecognizerAuthorizationStatusAuthorized:
+//                ORK_Log_Debug("Speech recognition request was authorized");
+//                break;
+//            default:
+//                // User did not authorize speech recognition
+//                break;
+//        }
+//    }];
 }
 
 - (void)startRecognitionWithLocale:(NSLocale *)locale reportPartialResults:(BOOL)reportPartialResults responseDelegate:(id<ORKSpeechRecognitionDelegate>)delegate errorHandler:(void (^)(NSError *error))handler
 {
-
-    _requestQueue = dispatch_queue_create("SpeechRequestQueue", DISPATCH_QUEUE_SERIAL);
-    _responseQueue = dispatch_queue_create("SpeechResponseQueue", DISPATCH_QUEUE_SERIAL);
-    
-    recognizer = [[SFSpeechRecognizer alloc] initWithLocale:locale];
-    if (!recognizer) {
-        handler([NSError errorWithDomain:ORKErrorDomain
-                                    code:ORKSpeechRecognitionErrorLanguageNotAvailable
-                                userInfo:@{NSLocalizedDescriptionKey:ORKLocalizedString(@"Speech recognizer could not be initialized", nil)}]);
-        return;
-    }
-    [recognizer setDelegate:self];
-
-    SFSpeechRecognizerAuthorizationStatus status = [SFSpeechRecognizer authorizationStatus];
-    if (status != SFSpeechRecognizerAuthorizationStatusAuthorized) {
-        handler([NSError errorWithDomain:ORKErrorDomain
-                                    code:ORKSpeechRecognitionErrorLanguageNotAvailable
-                                userInfo:@{NSLocalizedDescriptionKey:ORKLocalizedString(@"Speech recognizer not authorized", nil)}]);
-        return;
-    }
-    [recognizer isAvailable];
-    
-    _responseDelegate = delegate;
-
-    request = [[SFSpeechAudioBufferRecognitionRequest alloc] init];
-    if (!request) {
-        handler([NSError errorWithDomain:ORKErrorDomain
-                                    code:ORKSpeechRecognitionErrorLanguageNotAvailable
-                                userInfo:@{NSLocalizedDescriptionKey:ORKLocalizedString(@"Speech recognizer could not be initialized", nil)}]);
-        return;
-    }
-    
-    request.shouldReportPartialResults = reportPartialResults;
-    request.taskHint = SFSpeechRecognitionTaskHintDictation;
-    [recognizer recognitionTaskWithRequest:request delegate:self];
-    
+//
+//    _requestQueue = dispatch_queue_create("SpeechRequestQueue", DISPATCH_QUEUE_SERIAL);
+//    _responseQueue = dispatch_queue_create("SpeechResponseQueue", DISPATCH_QUEUE_SERIAL);
+//    
+//    recognizer = [[SFSpeechRecognizer alloc] initWithLocale:locale];
+//    if (!recognizer) {
+//        handler([NSError errorWithDomain:ORKErrorDomain
+//                                    code:ORKSpeechRecognitionErrorLanguageNotAvailable
+//                                userInfo:@{NSLocalizedDescriptionKey:ORKLocalizedString(@"Speech recognizer could not be initialized", nil)}]);
+//        return;
+//    }
+//    [recognizer setDelegate:self];
+//
+//    SFSpeechRecognizerAuthorizationStatus status = [SFSpeechRecognizer authorizationStatus];
+//    if (status != SFSpeechRecognizerAuthorizationStatusAuthorized) {
+//        handler([NSError errorWithDomain:ORKErrorDomain
+//                                    code:ORKSpeechRecognitionErrorLanguageNotAvailable
+//                                userInfo:@{NSLocalizedDescriptionKey:ORKLocalizedString(@"Speech recognizer not authorized", nil)}]);
+//        return;
+//    }
+//    [recognizer isAvailable];
+//    
+//    _responseDelegate = delegate;
+//
+//    request = [[SFSpeechAudioBufferRecognitionRequest alloc] init];
+//    if (!request) {
+//        handler([NSError errorWithDomain:ORKErrorDomain
+//                                    code:ORKSpeechRecognitionErrorLanguageNotAvailable
+//                                userInfo:@{NSLocalizedDescriptionKey:ORKLocalizedString(@"Speech recognizer could not be initialized", nil)}]);
+//        return;
+//    }
+//    
+//    request.shouldReportPartialResults = reportPartialResults;
+//    request.taskHint = SFSpeechRecognitionTaskHintDictation;
+//    [recognizer recognitionTaskWithRequest:request delegate:self];
+//    
 }
-
+//
 - (void)addAudio:(AVAudioPCMBuffer *)audioBuffer {
-    dispatch_async(_requestQueue, ^{
-        [request appendAudioPCMBuffer:audioBuffer];
-    });
+//    dispatch_async(_requestQueue, ^{
+//        [request appendAudioPCMBuffer:audioBuffer];
+//    });
 }
-
+//
 - (void)endAudio {
-    dispatch_async(_requestQueue, ^{
-        [request endAudio];
-    });
+//    dispatch_async(_requestQueue, ^{
+//        [request endAudio];
+//    });
 }
 
 // MARK: SFSpeechRecognizerDelegate

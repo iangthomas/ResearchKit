@@ -89,31 +89,31 @@ static const uint32_t IconDarkTintColor = 0xEF6FD8;
         [self.cardView updateIconTintColor:ORKRGB(IconLightTintColor)];
     }
 
-    [self checkMotionAuthStatus];
+//    [self checkMotionAuthStatus];
 }
 
--(void)checkMotionAuthStatus {
-    switch (CMMotionActivityManager.authorizationStatus) {
-        case CMAuthorizationStatusNotDetermined:
-            [self setState:ORKRequestPermissionsButtonStateDefault canContinue:NO];
-            break;
-
-        case CMAuthorizationStatusDenied:
-        case CMAuthorizationStatusAuthorized:
-        case CMAuthorizationStatusRestricted:
-            [self setState:ORKRequestPermissionsButtonStateConnected canContinue:YES];
-            break;
-    }
-}
+//-(void)checkMotionAuthStatus {
+//    switch (CMMotionActivityManager.authorizationStatus) {
+//        case CMAuthorizationStatusNotDetermined:
+//            [self setState:ORKRequestPermissionsButtonStateDefault canContinue:NO];
+//            break;
+//
+//        case CMAuthorizationStatusDenied:
+//        case CMAuthorizationStatusAuthorized:
+//        case CMAuthorizationStatusRestricted:
+//            [self setState:ORKRequestPermissionsButtonStateConnected canContinue:YES];
+//            break;
+//    }
+//}
 
 // There is no explicit API for requesting device motion permission.
 // It is requested automatically when you try read data for the first time.
 // This method tries to read data in order to trigger the permission dialogue.
 - (void)requestPermissionButtonPressed {
-    [self.activityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue]
-                                          withHandler:^(CMMotionActivity * _Nullable activity) {}];
-    [self.activityManager stopActivityUpdates];
-    [self setState:ORKRequestPermissionsButtonStateConnected canContinue:YES];
+//    [self.activityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue]
+//                                          withHandler:^(CMMotionActivity * _Nullable activity) {}];
+//    [self.activityManager stopActivityUpdates];
+//    [self setState:ORKRequestPermissionsButtonStateConnected canContinue:YES];
 }
 
 - (void)setState:(ORKRequestPermissionsButtonState)state canContinue:(BOOL)canContinue {

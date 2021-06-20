@@ -70,40 +70,40 @@
 - (NSString *)recorderType {
     return @"location";
 }
-
-- (CLLocationManager *)createLocationManager {
-    return [[CLLocationManager alloc] init];
-}
+//
+//- (CLLocationManager *)createLocationManager {
+//    return [[CLLocationManager alloc] init];
+//}
 
 - (void)start {
     [super start];
-    
-    if (!_logger) {
-        NSError *error = nil;
-        _logger = [self makeJSONDataLoggerWithError:&error];
-        if (!_logger) {
-            [self finishRecordingWithError:error];
-            return;
-        }
-    }
-    
-    self.locationManager = [self createLocationManager];
-    if ([CLLocationManager authorizationStatus] <= kCLAuthorizationStatusDenied) {
-        [self.locationManager requestWhenInUseAuthorization];
-    }
-    self.locationManager.pausesLocationUpdatesAutomatically = NO;
-    self.locationManager.delegate = self;
-    
-    if (!self.locationManager) {
-        NSError *error = [NSError errorWithDomain:NSCocoaErrorDomain
-                                             code:NSFeatureUnsupportedError
-                                         userInfo:@{@"recorder": self}];
-        [self finishRecordingWithError:error];
-        return;
-    }
-    
-    self.uptime = [NSProcessInfo processInfo].systemUptime;
-    [self.locationManager startUpdatingLocation];
+//
+//    if (!_logger) {
+//        NSError *error = nil;
+//        _logger = [self makeJSONDataLoggerWithError:&error];
+//        if (!_logger) {
+//            [self finishRecordingWithError:error];
+//            return;
+//        }
+//    }
+//
+//    self.locationManager = [self createLocationManager];
+//    if ([CLLocationManager authorizationStatus] <= kCLAuthorizationStatusDenied) {
+//        [self.locationManager requestWhenInUseAuthorization];
+//    }
+//    self.locationManager.pausesLocationUpdatesAutomatically = NO;
+//    self.locationManager.delegate = self;
+//
+//    if (!self.locationManager) {
+//        NSError *error = [NSError errorWithDomain:NSCocoaErrorDomain
+//                                             code:NSFeatureUnsupportedError
+//                                         userInfo:@{@"recorder": self}];
+//        [self finishRecordingWithError:error];
+//        return;
+//    }
+//
+//    self.uptime = [NSProcessInfo processInfo].systemUptime;
+//    [self.locationManager startUpdatingLocation];
 }
 
 - (void)doStopRecording {
@@ -128,36 +128,36 @@
     [super stop];
 }
 
-- (void)locationManager:(CLLocationManager *)manager
-     didUpdateLocations:(NSArray *)locations {
-    BOOL success = YES;
-    NSParameterAssert(locations.count >= 0);
-    NSError *error = nil;
-    if (locations) {
-        NSMutableArray *dictionaries = [NSMutableArray arrayWithCapacity:locations.count];
-        [locations enumerateObjectsUsingBlock:^(CLLocation *obj, NSUInteger idx, BOOL *stop) {
-            NSDictionary *d = [obj ork_JSONDictionary];
-            [dictionaries addObject:d];
-        }];
-        
-        success = [_logger appendObjects:dictionaries error:&error];
-    }
-    if (!success) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            _recordingError = error;
-            [self stop];
-        });
-    }
-}
+//- (void)locationManager:(CLLocationManager *)manager
+//     didUpdateLocations:(NSArray *)locations {
+//    BOOL success = YES;
+//    NSParameterAssert(locations.count >= 0);
+//    NSError *error = nil;
+//    if (locations) {
+//        NSMutableArray *dictionaries = [NSMutableArray arrayWithCapacity:locations.count];
+//        [locations enumerateObjectsUsingBlock:^(CLLocation *obj, NSUInteger idx, BOOL *stop) {
+//            NSDictionary *d = [obj ork_JSONDictionary];
+//            [dictionaries addObject:d];
+//        }];
+//        
+//        success = [_logger appendObjects:dictionaries error:&error];
+//    }
+//    if (!success) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            _recordingError = error;
+//            [self stop];
+//        });
+//    }
+//}
 
 - (void)finishRecordingWithError:(NSError *)error {
     [self doStopRecording];
     [super finishRecordingWithError:nil];
 }
 
-- (BOOL)isRecording {
-    return [CLLocationManager locationServicesEnabled] && (self.locationManager != nil) && ([CLLocationManager authorizationStatus] > kCLAuthorizationStatusDenied);
-}
+//- (BOOL)isRecording {
+//    return [CLLocationManager locationServicesEnabled] && (self.locationManager != nil) && ([CLLocationManager authorizationStatus] > kCLAuthorizationStatusDenied);
+//}
 
 - (void)reset {
     [super reset];
