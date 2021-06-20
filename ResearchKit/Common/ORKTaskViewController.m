@@ -31,18 +31,18 @@
 
 #import "ORKTaskViewController.h"
 
-#import "ORKActiveStepViewController.h"
+//#import "ORKActiveStepViewController.h"
 #import "ORKInstructionStepViewController_Internal.h"
 #import "ORKFormStepViewController.h"
 #import "ORKQuestionStepViewController.h"
 #import "ORKReviewStepViewController_Internal.h"
 #import "ORKStepViewController_Internal.h"
-#import "ORKTappingIntervalStepViewController.h"
+//#import "ORKTappingIntervalStepViewController.h"
 #import "ORKTaskViewController_Internal.h"
 #import "ORKVisualConsentStepViewController.h"
 #import "ORKLearnMoreStepViewController.h"
 
-#import "ORKActiveStep.h"
+//#import "ORKActiveStep.h"
 #import "ORKCollectionResult_Private.h"
 #import "ORKFormStep.h"
 #import "ORKInstructionStep.h"
@@ -51,7 +51,7 @@
 #import "ORKResult_Private.h"
 #import "ORKReviewStep_Internal.h"
 #import "ORKStep_Private.h"
-#import "ORKTappingIntervalStep.h"
+//#import "ORKTappingIntervalStep.h"
 #import "ORKVisualConsentStep.h"
 
 #import "ORKHelpers_Internal.h"
@@ -1395,9 +1395,9 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     if (!previousStep) {
         previousStep = [self stepBeforeStep:thisStep];
     }
-    if ([previousStep isKindOfClass:[ORKActiveStep class]] || ([thisStep allowsBackNavigation] == NO)) {
-        previousStep = nil; // Can't go back to an active step
-    }
+//    if ([previousStep isKindOfClass:[ORKActiveStep class]] || ([thisStep allowsBackNavigation] == NO)) {
+//        previousStep = nil; // Can't go back to an active step
+//    }
     return (previousStep != nil);
 }
 

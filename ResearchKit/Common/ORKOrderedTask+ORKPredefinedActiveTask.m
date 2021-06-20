@@ -33,7 +33,7 @@
 #import "ORKOrderedTask+ORKPredefinedActiveTask.h"
 #import "ORKOrderedTask_Private.h"
 
-#import "ORKAudioStepViewController.h"
+//#import "ORKAudioStepViewController.h"
 #import "ORKAmslerGridStepViewController.h"
 #import "ORKCountdownStepViewController.h"
 #import "ORKTouchAnywhereStepViewController.h"

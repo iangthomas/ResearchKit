@@ -35,7 +35,7 @@
 #import "ORKStepContentView_Private.h"
 #import "ORKBodyContainerView.h"
 #import "ORKSkin.h"
-#import "ORKActiveStep.h"
+//#import "ORKActiveStep.h"
 #import "ORKNavigationContainerView_Internal.h"
 #import "ORKTypes.h"
 

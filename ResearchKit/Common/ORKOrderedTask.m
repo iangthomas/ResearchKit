@@ -39,7 +39,7 @@
 #import "ORKCompletionStep.h"
 #import "ORKFormItem_Internal.h"
 
-#import "ORKActiveStep_Internal.h"
+//#import "ORKActiveStep_Internal.h"
 #import "ORKStep_Private.h"
 #import "ORKHelpers_Internal.h"
 #import "ORKSkin.h"
