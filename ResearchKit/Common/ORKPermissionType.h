@@ -46,13 +46,13 @@ ORK_CLASS_AVAILABLE
 @interface ORKPermissionType : NSObject
 
 @property (nonatomic) ORKRequestPermissionView *cardView;
-
-+ (ORKHealthKitPermissionType *)healthKitPermissionTypeWithSampleTypesToWrite:(nullable NSSet<HKSampleType *> *)sampleTypesToWrite
-                                                            objectTypesToRead:(nullable NSSet<HKObjectType *> *)objectTypesToRead;
-
-+ (ORKNotificationPermissionType *)notificationPermissionType:(UNAuthorizationOptions)options;
-
-+ (ORKMotionActivityPermissionType *)deviceMotionPermissionType;
+//
+//+ (ORKHealthKitPermissionType *)healthKitPermissionTypeWithSampleTypesToWrite:(nullable NSSet<HKSampleType *> *)sampleTypesToWrite
+//                                                            objectTypesToRead:(nullable NSSet<HKObjectType *> *)objectTypesToRead;
+//
+//+ (ORKNotificationPermissionType *)notificationPermissionType:(UNAuthorizationOptions)options;
+//
+//+ (ORKMotionActivityPermissionType *)deviceMotionPermissionType;
 
 @end
 

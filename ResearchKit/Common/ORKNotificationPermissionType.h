@@ -36,12 +36,12 @@ NS_ASSUME_NONNULL_BEGIN
 ORK_CLASS_AVAILABLE
 @interface ORKNotificationPermissionType : ORKPermissionType
 
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
+//+ (instancetype)new NS_UNAVAILABLE;
+//- (instancetype)init NS_UNAVAILABLE;
 
-- (instancetype)initWithAuthorizationOptions:(UNAuthorizationOptions)options;
+//- (instancetype)initWithAuthorizationOptions:(UNAuthorizationOptions)options;
 
-@property (nonatomic, readonly) UNAuthorizationOptions options;
+//@property (nonatomic, readonly) UNAuthorizationOptions options;
 
 @end
 

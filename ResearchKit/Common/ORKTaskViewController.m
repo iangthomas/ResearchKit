@@ -140,8 +140,8 @@ typedef void (^_ORKLocationAuthorizationRequestHandler)(BOOL success);
     BOOL _hasRequestedHealthData;
     BOOL _saveable;
     ORKPermissionMask _grantedPermissions;
-    NSSet<HKObjectType *> *_requestedHealthTypesForRead;
-    NSSet<HKObjectType *> *_requestedHealthTypesForWrite;
+//    NSSet<HKObjectType *> *_requestedHealthTypesForRead;
+//    NSSet<HKObjectType *> *_requestedHealthTypesForWrite;
     NSURL *_outputDirectory;
     
     NSDate *_presentedDate;
@@ -324,83 +324,83 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     return [[UIBarButtonItem alloc] initWithTitle:ORKLocalizedString(@"BUTTON_LEARN_MORE", nil) style:UIBarButtonItemStylePlain target:self action:@selector(learnMoreAction:)];
 }
 
-- (void)requestHealthStoreAccessWithReadTypes:(NSSet *)readTypes
-                                   writeTypes:(NSSet *)writeTypes
-                                      handler:(void (^)(void))handler {
-    NSParameterAssert(handler != nil);
-    if ((![HKHealthStore isHealthDataAvailable]) || (!readTypes && !writeTypes)) {
-        _requestedHealthTypesForRead = nil;
-        _requestedHealthTypesForWrite = nil;
-        handler();
-        return;
-    }
-    
-    _requestedHealthTypesForRead = readTypes;
-    _requestedHealthTypesForWrite = writeTypes;
-    
-    __block HKHealthStore *healthStore = [HKHealthStore new];
-    [healthStore requestAuthorizationToShareTypes:writeTypes readTypes:readTypes completion:^(BOOL success, NSError *error) {
-        ORK_Log_Error("Health access: error=%@", error);
-        dispatch_async(dispatch_get_main_queue(), handler);
-        
-        // Clear self-ref.
-        healthStore = nil;
-    }];
-}
+//- (void)requestHealthStoreAccessWithReadTypes:(NSSet *)readTypes
+//                                   writeTypes:(NSSet *)writeTypes
+//                                      handler:(void (^)(void))handler {
+//    NSParameterAssert(handler != nil);
+//    if ((![HKHealthStore isHealthDataAvailable]) || (!readTypes && !writeTypes)) {
+//        _requestedHealthTypesForRead = nil;
+//        _requestedHealthTypesForWrite = nil;
+//        handler();
+//        return;
+//    }
+//
+//    _requestedHealthTypesForRead = readTypes;
+//    _requestedHealthTypesForWrite = writeTypes;
+//
+//    __block HKHealthStore *healthStore = [HKHealthStore new];
+//    [healthStore requestAuthorizationToShareTypes:writeTypes readTypes:readTypes completion:^(BOOL success, NSError *error) {
+//        ORK_Log_Error("Health access: error=%@", error);
+//        dispatch_async(dispatch_get_main_queue(), handler);
+//
+//        // Clear self-ref.
+//        healthStore = nil;
+//    }];
+//}
 
-- (void)requestPedometerAccessWithHandler:(void (^)(BOOL success))handler {
-    NSParameterAssert(handler != nil);
-    if (![CMPedometer isStepCountingAvailable]) {
-        handler(NO);
-        return;
-    }
-    
-    __block CMPedometer *pedometer = [CMPedometer new];
-    [pedometer queryPedometerDataFromDate:[NSDate dateWithTimeIntervalSinceNow:-100]
-                                   toDate:[NSDate date]
-                              withHandler:^(CMPedometerData *pedometerData, NSError *error) {
-                                  ORK_Log_Error("Pedometer access: error=%@", error);
-                                  
-                                  BOOL success = YES;
-                                  if ([[error domain] isEqualToString:CMErrorDomain]) {
-                                      switch (error.code) {
-                                          case CMErrorMotionActivityNotAuthorized:
-                                          case CMErrorNotAuthorized:
-                                          case CMErrorNotAvailable:
-                                          case CMErrorNotEntitled:
-                                          case CMErrorMotionActivityNotAvailable:
-                                          case CMErrorMotionActivityNotEntitled:
-                                              success = NO;
-                                              break;
-                                          default:
-                                              break;
-                                      }
-                                  }
-                                  
-                                  dispatch_async(dispatch_get_main_queue(), ^(void) { handler(success); });
-                                  
-                                  // Clear self ref to release.
-                                  pedometer = nil;
-                              }];
-}
+//- (void)requestPedometerAccessWithHandler:(void (^)(BOOL success))handler {
+//    NSParameterAssert(handler != nil);
+//    if (![CMPedometer isStepCountingAvailable]) {
+//        handler(NO);
+//        return;
+//    }
+//
+//    __block CMPedometer *pedometer = [CMPedometer new];
+//    [pedometer queryPedometerDataFromDate:[NSDate dateWithTimeIntervalSinceNow:-100]
+//                                   toDate:[NSDate date]
+//                              withHandler:^(CMPedometerData *pedometerData, NSError *error) {
+//                                  ORK_Log_Error("Pedometer access: error=%@", error);
+//
+//                                  BOOL success = YES;
+//                                  if ([[error domain] isEqualToString:CMErrorDomain]) {
+//                                      switch (error.code) {
+//                                          case CMErrorMotionActivityNotAuthorized:
+//                                          case CMErrorNotAuthorized:
+//                                          case CMErrorNotAvailable:
+//                                          case CMErrorNotEntitled:
+//                                          case CMErrorMotionActivityNotAvailable:
+//                                          case CMErrorMotionActivityNotEntitled:
+//                                              success = NO;
+//                                              break;
+//                                          default:
+//                                              break;
+//                                      }
+//                                  }
+//
+//                                  dispatch_async(dispatch_get_main_queue(), ^(void) { handler(success); });
+//
+//                                  // Clear self ref to release.
+//                                  pedometer = nil;
+//                              }];
+//}
 
-- (void)requestAudioRecordingAccessWithHandler:(void (^)(BOOL success))handler {
-    NSParameterAssert(handler != nil);
+//- (void)requestAudioRecordingAccessWithHandler:(void (^)(BOOL success))handler {
+//    NSParameterAssert(handler != nil);
 //    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
 //        dispatch_async(dispatch_get_main_queue(), ^{
 //            handler(granted);
 //        });
 //    }];
-}
+//}
 
-- (void)requestCameraAccessWithHandler:(void (^)(BOOL success))handler {
-    NSParameterAssert(handler != nil);
+//- (void)requestCameraAccessWithHandler:(void (^)(BOOL success))handler {
+//    NSParameterAssert(handler != nil);
 //    [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
 //        dispatch_async(dispatch_get_main_queue(), ^{
 //            handler(granted);
 //        });
 //    }];
-}
+//}
 
 //- (void)requestLocationAccessWithHandler:(void (^)(BOOL success))handler {
 //    NSParameterAssert(handler != nil);
@@ -417,13 +417,13 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 //    [requester resume];
 //}
 
-- (ORKPermissionMask)desiredPermissions {
-    ORKPermissionMask permissions = ORKPermissionNone;
-    if ([self.task respondsToSelector:@selector(requestedPermissions)]) {
-        permissions = [self.task requestedPermissions];
-    }
-    return permissions;
-}
+//- (ORKPermissionMask)desiredPermissions {
+//    ORKPermissionMask permissions = ORKPermissionNone;
+//    if ([self.task respondsToSelector:@selector(requestedPermissions)]) {
+//        permissions = [self.task requestedPermissions];
+//    }
+//    return permissions;
+//}
 
 //- (void)requestHealthAuthorizationWithCompletion:(void (^)(void))completion {
 //    if (_hasRequestedHealthData) {
@@ -583,13 +583,13 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 //    }
 //}
 //
-- (NSSet<HKObjectType *> *)requestedHealthTypesForRead {
-    return _requestedHealthTypesForRead;
-}
-
-- (NSSet<HKObjectType *> *)requestedHealthTypesForWrite {
-    return _requestedHealthTypesForWrite;
-}
+//- (NSSet<HKObjectType *> *)requestedHealthTypesForRead {
+//    return _requestedHealthTypesForRead;
+//}
+//
+//- (NSSet<HKObjectType *> *)requestedHealthTypesForWrite {
+//    return _requestedHealthTypesForWrite;
+//}
 
 - (void)loadView {
     self.view = [[UIView alloc] initWithFrame:CGRectZero];
@@ -841,8 +841,8 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 
 - (BOOL)grantedAtLeastOnePermission {
     // Return YES, if no desired permission or granted at least one permission.
-    ORKPermissionMask desiredMask = [self desiredPermissions];
-    return (desiredMask == 0 || ((desiredMask & _grantedPermissions) != 0));
+//    ORKPermissionMask desiredMask = [self desiredPermissions];
+    return true;
 }
 
 - (void)showStepViewController:(ORKStepViewController *)stepViewController goForward:(BOOL)goForward animated:(BOOL)animated {
@@ -1467,8 +1467,8 @@ static NSString *const _ORKManagedResultsRestoreKey = @"managedResults";
 static NSString *const _ORKManagedStepIdentifiersRestoreKey = @"managedStepIdentifiers";
 static NSString *const _ORKHasSetProgressLabelRestoreKey = @"hasSetProgressLabel";
 static NSString *const _ORKHasRequestedHealthDataRestoreKey = @"hasRequestedHealthData";
-static NSString *const _ORKRequestedHealthTypesForReadRestoreKey = @"requestedHealthTypesForRead";
-static NSString *const _ORKRequestedHealthTypesForWriteRestoreKey = @"requestedHealthTypesForWrite";
+//static NSString *const _ORKRequestedHealthTypesForReadRestoreKey = @"requestedHealthTypesForRead";
+//static NSString *const _ORKRequestedHealthTypesForWriteRestoreKey = @"requestedHealthTypesForWrite";
 static NSString *const _ORKOutputDirectoryRestoreKey = @"outputDirectory";
 static NSString *const _ORKLastBeginningInstructionStepIdentifierKey = @"lastBeginningInstructionStepIdentifier";
 static NSString *const _ORKTaskIdentifierRestoreKey = @"taskIdentifier";
@@ -1484,8 +1484,8 @@ static NSString *const _ORKProgressMode = @"progressMode";
     [coder encodeBool:self.discardable forKey:_ORKDiscardableTaskRestoreKey];
     [coder encodeObject:_managedResults forKey:_ORKManagedResultsRestoreKey];
     [coder encodeObject:_managedStepIdentifiers forKey:_ORKManagedStepIdentifiersRestoreKey];
-    [coder encodeObject:_requestedHealthTypesForRead forKey:_ORKRequestedHealthTypesForReadRestoreKey];
-    [coder encodeObject:_requestedHealthTypesForWrite forKey:_ORKRequestedHealthTypesForWriteRestoreKey];
+//    [coder encodeObject:_requestedHealthTypesForRead forKey:_ORKRequestedHealthTypesForReadRestoreKey];
+//    [coder encodeObject:_requestedHealthTypesForWrite forKey:_ORKRequestedHealthTypesForWriteRestoreKey];
     [coder encodeObject:_presentedDate forKey:_ORKPresentedDate];
     [coder encodeInteger:_progressMode forKey:_ORKProgressMode];
     [coder encodeObject:ORKBookmarkDataFromURL(_outputDirectory) forKey:_ORKOutputDirectoryRestoreKey];
@@ -1528,16 +1528,16 @@ static NSString *const _ORKProgressMode = @"progressMode";
             }
         }
         
-        if ([_task respondsToSelector:@selector(stepWithIdentifier:)]) {
-            _requestedHealthTypesForRead = [coder decodeObjectOfClass:[NSSet class] forKey:_ORKRequestedHealthTypesForReadRestoreKey];
-            _requestedHealthTypesForWrite = [coder decodeObjectOfClass:[NSSet class] forKey:_ORKRequestedHealthTypesForWriteRestoreKey];
-            _presentedDate = [coder decodeObjectOfClass:[NSDate class] forKey:_ORKPresentedDate];
-            _lastBeginningInstructionStepIdentifier = [coder decodeObjectOfClass:[NSString class] forKey:_ORKLastBeginningInstructionStepIdentifierKey];
-            
-            _restoredStepIdentifier = [coder decodeObjectOfClass:[NSString class] forKey:_ORKStepIdentifierRestoreKey];
-        } else {
-            ORK_Log_Info("Not restoring current step of task %@ because it does not implement -stepWithIdentifier:", _task.identifier);
-        }
+//        if ([_task respondsToSelector:@selector(stepWithIdentifier:)]) {
+//            _requestedHealthTypesForRead = [coder decodeObjectOfClass:[NSSet class] forKey:_ORKRequestedHealthTypesForReadRestoreKey];
+//            _requestedHealthTypesForWrite = [coder decodeObjectOfClass:[NSSet class] forKey:_ORKRequestedHealthTypesForWriteRestoreKey];
+//            _presentedDate = [coder decodeObjectOfClass:[NSDate class] forKey:_ORKPresentedDate];
+//            _lastBeginningInstructionStepIdentifier = [coder decodeObjectOfClass:[NSString class] forKey:_ORKLastBeginningInstructionStepIdentifierKey];
+//            
+//            _restoredStepIdentifier = [coder decodeObjectOfClass:[NSString class] forKey:_ORKStepIdentifierRestoreKey];
+//        } else {
+//            ORK_Log_Info("Not restoring current step of task %@ because it does not implement -stepWithIdentifier:", _task.identifier);
+//        }
     }
 }
 

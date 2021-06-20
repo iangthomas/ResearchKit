@@ -372,24 +372,24 @@ static const CGFloat DelayBeforeAutoScroll = 0.25;
         }
     }
     
-    BOOL refreshDefaultsPending = NO;
-    if (types.count) {
-        NSSet<HKObjectType *> *alreadyRequested = [[self taskViewController] requestedHealthTypesForRead];
-        if (![types isSubsetOfSet:alreadyRequested]) {
-            refreshDefaultsPending = YES;
-            [_defaultSource.healthStore requestAuthorizationToShareTypes:nil readTypes:types completion:^(BOOL success, NSError *error) {
-                if (!success) {
-                    ORK_Log_Debug("Authorization: %@",error);
-                }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self refreshDefaults];
-                });
-            }];
-        }
-    }
-    if (!refreshDefaultsPending) {
-        [self refreshDefaults];
-    }
+//    BOOL refreshDefaultsPending = NO;
+//    if (types.count) {
+//        NSSet<HKObjectType *> *alreadyRequested = [[self taskViewController] requestedHealthTypesForRead];
+//        if (![types isSubsetOfSet:alreadyRequested]) {
+//            refreshDefaultsPending = YES;
+//            [_defaultSource.healthStore requestAuthorizationToShareTypes:nil readTypes:types completion:^(BOOL success, NSError *error) {
+//                if (!success) {
+//                    ORK_Log_Debug("Authorization: %@",error);
+//                }
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [self refreshDefaults];
+//                });
+//            }];
+//        }
+//    }
+//    if (!refreshDefaultsPending) {
+//        [self refreshDefaults];
+//    }
     
     // Reset skipped flag - result can now be non-empty
     _skipped = NO;

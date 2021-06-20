@@ -330,13 +330,13 @@ static NSString *const ItemIdentifierFormatWithTwoPlaceholders = @"org.researchk
     return elements;
 }
 
-- (ORKOperation *)collectionOperationWithManager:(ORKDataCollectionManager *)mananger {
-    if (! [CMMotionActivityManager isActivityAvailable]) {
-        return nil;
-    }
-    
-    return [[ORKMotionActivityQueryOperation alloc] initWithCollector:self queryQueue:nil manager:mananger];
-}
+//- (ORKOperation *)collectionOperationWithManager:(ORKDataCollectionManager *)mananger {
+//    if (! [CMMotionActivityManager isActivityAvailable]) {
+//        return nil;
+//    }
+//
+//    return [[ORKMotionActivityQueryOperation alloc] initWithCollector:self queryQueue:nil manager:mananger];
+//}
 
 - (instancetype)copyWithZone:(NSZone *)zone {
     ORKMotionActivityCollector *collector = [super copyWithZone:zone];

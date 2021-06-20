@@ -46,35 +46,35 @@ static NSString *const Symbol = @"app.badge";
 @end
 
 @implementation ORKNotificationPermissionType
+//
+//+ (instancetype)new {
+//    ORKThrowMethodUnavailableException();
+//}
+//
+//- (instancetype)init {
+//    ORKThrowMethodUnavailableException();
+//}
 
-+ (instancetype)new {
-    ORKThrowMethodUnavailableException();
-}
+//- (instancetype)initWithAuthorizationOptions:(UNAuthorizationOptions)options {
+//    NSAssert(options != 0, @"Authorization options must not be empty!");
+//    self = [super init];
+//    if (self) {
+//        self.options = options;
+//        [self setupCardView];
+//    }
+//    return self;
+//}
 
-- (instancetype)init {
-    ORKThrowMethodUnavailableException();
-}
-
-- (instancetype)initWithAuthorizationOptions:(UNAuthorizationOptions)options {
-    NSAssert(options != 0, @"Authorization options must not be empty!");
-    self = [super init];
-    if (self) {
-        self.options = options;
-        [self setupCardView];
-    }
-    return self;
-}
-
-- (void)setupCardView {
-    UIImage *image;
-
-    if (@available(iOS 13.0, *)) {
-        image = [UIImage systemImageNamed:Symbol];
-    }
-
-    self.cardView = [[ORKRequestPermissionView alloc] initWithIconImage:image
-                                                                  title:ORKLocalizedString(@"REQUEST_NOTIFICATIONS_STEP_VIEW_TITLE", nil)
-                                                             detailText:ORKLocalizedString(@"REQUEST_NOTIFICATIONS_STEP_VIEW_DESCRIPTION", nil)];
+//- (void)setupCardView {
+//    UIImage *image;
+//
+//    if (@available(iOS 13.0, *)) {
+//        image = [UIImage systemImageNamed:Symbol];
+//    }
+//
+//    self.cardView = [[ORKRequestPermissionView alloc] initWithIconImage:image
+//                                                                  title:ORKLocalizedString(@"REQUEST_NOTIFICATIONS_STEP_VIEW_TITLE", nil)
+//                                                             detailText:ORKLocalizedString(@"REQUEST_NOTIFICATIONS_STEP_VIEW_DESCRIPTION", nil)];
 
 //    [self.cardView.requestPermissionButton addTarget:self action:@selector(requestPermissionButtonPressed) forControlEvents:UIControlEventTouchUpInside];
 
@@ -108,7 +108,7 @@ static NSString *const Symbol = @"app.badge";
 //            }
 //        });
 //    }];
-}
+//}
 
 //- (void)requestPermissionButtonPressed {
 //    [[UNUserNotificationCenter currentNotificationCenter]
@@ -124,18 +124,18 @@ static NSString *const Symbol = @"app.badge";
 //    }];
 //}
 
-- (void)setState:(ORKRequestPermissionsButtonState)state canContinue:(BOOL)canContinue {
-    [self.cardView setEnableContinueButton:canContinue];
-    [self.cardView.requestPermissionButton setState:state];
-}
-
-- (BOOL)isEqual:(id)object {
-    if ([self class] != [object class]) {
-        return NO;
-    }
-
-    __typeof(self) castObject = object;
-    return (self.options & castObject.options) == self.options;
-}
+//- (void)setState:(ORKRequestPermissionsButtonState)state canContinue:(BOOL)canContinue {
+//    [self.cardView setEnableContinueButton:canContinue];
+//    [self.cardView.requestPermissionButton setState:state];
+//}
+//
+//- (BOOL)isEqual:(id)object {
+//    if ([self class] != [object class]) {
+//        return NO;
+//    }
+//
+//    __typeof(self) castObject = object;
+//    return (self.options & castObject.options) == self.options;
+//}
 
 @end

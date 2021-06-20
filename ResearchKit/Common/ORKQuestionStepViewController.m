@@ -396,19 +396,19 @@ static const CGFloat DelayBeforeAutoScroll = 0.25;
     }
     
     BOOL scheduledRefresh = NO;
-    if (types.count) {
-        NSSet<HKObjectType *> *alreadyRequested = [[self taskViewController] requestedHealthTypesForRead];
-        if (![types isSubsetOfSet:alreadyRequested]) {
-            scheduledRefresh = YES;
-            [_defaultSource.healthStore requestAuthorizationToShareTypes:nil readTypes:types completion:^(BOOL success, NSError *error) {
-                if (success) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self refreshDefaults];
-                    });
-                }
-            }];
-        }
-    }
+//    if (types.count) {
+//        NSSet<HKObjectType *> *alreadyRequested = [[self taskViewController] requestedHealthTypesForRead];
+//        if (![types isSubsetOfSet:alreadyRequested]) {
+//            scheduledRefresh = YES;
+//            [_defaultSource.healthStore requestAuthorizationToShareTypes:nil readTypes:types completion:^(BOOL success, NSError *error) {
+//                if (success) {
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        [self refreshDefaults];
+//                    });
+//                }
+//            }];
+//        }
+//    }
     if (!scheduledRefresh) {
         [self refreshDefaults];
     }

@@ -40,9 +40,9 @@
  runs until there is no more CoreMotion data available, or until otherwise stopped.
  */
 @interface ORKMotionActivityQueryOperation : ORKOperation
-
-- (instancetype)initWithCollector:(ORKMotionActivityCollector*)collector
-                      queryQueue:(NSOperationQueue*)queue
-                         manager:(ORKDataCollectionManager *)manager;
+//
+//- (instancetype)initWithCollector:(ORKMotionActivityCollector*)collector
+//                      queryQueue:(NSOperationQueue*)queue
+//                         manager:(ORKDataCollectionManager *)manager;
 
 @end

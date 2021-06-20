@@ -36,61 +36,61 @@
 @import CoreMotion;
 
 static NSString *const Symbol = @"arrow.right.arrow.left.circle";
-static const uint32_t IconLightTintColor = 0xEF72D8;
-static const uint32_t IconDarkTintColor = 0xEF6FD8;
+//static const uint32_t IconLightTintColor = 0xEF72D8;
+//static const uint32_t IconDarkTintColor = 0xEF6FD8;
 
 @interface ORKMotionActivityPermissionType()
-@property (nonatomic) CMMotionActivityManager *activityManager;
+//@property (nonatomic) CMMotionActivityManager *activityManager;
 @end
 
 @implementation ORKMotionActivityPermissionType
+//
+//+ (instancetype)new {
+//    return [[ORKMotionActivityPermissionType alloc] init];
+//}
+//
+//- (instancetype)init
+//{
+//    self = [super init];
+//    if (self) {
+//        [self setupCardView];
+//    }
+//    return self;
+//}
 
-+ (instancetype)new {
-    return [[ORKMotionActivityPermissionType alloc] init];
-}
+//- (CMMotionActivityManager *)activityManager {
+//    if (!_activityManager) {
+//        _activityManager = [[CMMotionActivityManager alloc] init];
+//    }
+//    return _activityManager;
+//}
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        [self setupCardView];
-    }
-    return self;
-}
-
-- (CMMotionActivityManager *)activityManager {
-    if (!_activityManager) {
-        _activityManager = [[CMMotionActivityManager alloc] init];
-    }
-    return _activityManager;
-}
-
-- (void)setupCardView {
-
-    UIImage *image;
-    if (@available(iOS 13, *)) {
-        image = [UIImage systemImageNamed:Symbol];
-    }
-
-    self.cardView = [[ORKRequestPermissionView alloc]
-                     initWithIconImage:image
-                     title:ORKLocalizedString(@"REQUEST_MOTION_ACTIVITY_STEP_VIEW_TITLE", nil)
-                     detailText:ORKLocalizedString(@"REQUEST_MOTION_ACTIVITY_STEP_VIEW_DESCRIPTION", nil)];
-
-    [self.cardView.requestPermissionButton addTarget:self action:@selector(requestPermissionButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-
-    // Set the tint color for the icon
-    if (@available(iOS 13, *)) {
-        UIColor *dynamicTint = [[UIColor alloc] initWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
-            return traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? ORKRGB(IconDarkTintColor) : ORKRGB(IconLightTintColor);
-        }];
-        [self.cardView updateIconTintColor:dynamicTint];
-    } else {
-        [self.cardView updateIconTintColor:ORKRGB(IconLightTintColor)];
-    }
+//- (void)setupCardView {
+//
+//    UIImage *image;
+//    if (@available(iOS 13, *)) {
+//        image = [UIImage systemImageNamed:Symbol];
+//    }
+//
+//    self.cardView = [[ORKRequestPermissionView alloc]
+//                     initWithIconImage:image
+//                     title:ORKLocalizedString(@"REQUEST_MOTION_ACTIVITY_STEP_VIEW_TITLE", nil)
+//                     detailText:ORKLocalizedString(@"REQUEST_MOTION_ACTIVITY_STEP_VIEW_DESCRIPTION", nil)];
+//
+//    [self.cardView.requestPermissionButton addTarget:self action:@selector(requestPermissionButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+//
+//    // Set the tint color for the icon
+//    if (@available(iOS 13, *)) {
+//        UIColor *dynamicTint = [[UIColor alloc] initWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+//            return traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? ORKRGB(IconDarkTintColor) : ORKRGB(IconLightTintColor);
+//        }];
+//        [self.cardView updateIconTintColor:dynamicTint];
+//    } else {
+//        [self.cardView updateIconTintColor:ORKRGB(IconLightTintColor)];
+//    }
 
 //    [self checkMotionAuthStatus];
-}
+//}
 
 //-(void)checkMotionAuthStatus {
 //    switch (CMMotionActivityManager.authorizationStatus) {
@@ -109,23 +109,23 @@ static const uint32_t IconDarkTintColor = 0xEF6FD8;
 // There is no explicit API for requesting device motion permission.
 // It is requested automatically when you try read data for the first time.
 // This method tries to read data in order to trigger the permission dialogue.
-- (void)requestPermissionButtonPressed {
+//- (void)requestPermissionButtonPressed {
 //    [self.activityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue]
 //                                          withHandler:^(CMMotionActivity * _Nullable activity) {}];
 //    [self.activityManager stopActivityUpdates];
 //    [self setState:ORKRequestPermissionsButtonStateConnected canContinue:YES];
-}
-
-- (void)setState:(ORKRequestPermissionsButtonState)state canContinue:(BOOL)canContinue {
-    [self.cardView setEnableContinueButton:canContinue];
-    [self.cardView.requestPermissionButton setState:state];
-}
-
-- (BOOL)isEqual:(id)object {
-    if ([self class] != [object class]) {
-        return NO;
-    }
-    return YES;
-}
+//}
+//
+//- (void)setState:(ORKRequestPermissionsButtonState)state canContinue:(BOOL)canContinue {
+//    [self.cardView setEnableContinueButton:canContinue];
+//    [self.cardView.requestPermissionButton setState:state];
+//}
+//
+//- (BOOL)isEqual:(id)object {
+//    if ([self class] != [object class]) {
+//        return NO;
+//    }
+//    return YES;
+//}
 
 @end
