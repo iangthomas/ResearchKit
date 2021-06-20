@@ -66,13 +66,13 @@
 }
 
 - (void)restoreSavedAudioSessionCategory {
-    if (_savedSessionCategory) {
-        NSError *error;
-        if (![[AVAudioSession sharedInstance] setCategory:_savedSessionCategory error:&error]) {
-            ORK_Log_Error("Failed to restore the audio session category: %@", [error localizedDescription]);
-        }
-        _savedSessionCategory = nil;
-    }
+//    if (_savedSessionCategory) {
+//        NSError *error;
+//        if (![[AVAudioSession sharedInstance] setCategory:_savedSessionCategory error:&error]) {
+//            ORK_Log_Error("Failed to restore the audio session category: %@", [error localizedDescription]);
+//        }
+//        _savedSessionCategory = nil;
+//    }
 }
 
 - (NSURL *)recordingFileURL {
@@ -106,80 +106,80 @@
 }
 
 - (void)start {
-    if (self.outputDirectory == nil) {
-        @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"StreamingAudioRecorder requires an output directory" userInfo:nil];
-    }
-    if (!_audioEngine)
-    {
-        NSError *error = nil;
-        
-        if (![self recreateFileWithError:&error]) {
-            [self finishRecordingWithError:error];
-            return;
-        }
-        
-        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-        _savedSessionCategory = audioSession.category;
-        if (![audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:&error]) {
-            [self finishRecordingWithError:error];
-            return;
-        }
-        [audioSession setMode:AVAudioSessionModeMeasurement error:&error];
-        if (error) {
-            [self finishRecordingWithError:error];
-            return;
-        }
-        [audioSession setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error];
-        if (error) {
-            [self finishRecordingWithError:error];
-            return;
-        }
-        
-        ORK_Log_Debug("Create audioEngine recorder %p", self);
-        
-        _audioEngine = [[AVAudioEngine alloc] init];
-        AVAudioInputNode *inputnode = _audioEngine.inputNode;
-        AVAudioFormat *recordingFormat = [inputnode inputFormatForBus:0];
-        
-        NSURL *audiourl = [self recordingFileURL];
-        
-        // Update the file type to be written to the file
-        NSMutableDictionary *modifiedSettings = [NSMutableDictionary dictionaryWithDictionary:[recordingFormat settings]];
-        if (@available(iOS 11.0, *)) {
-            modifiedSettings[AVAudioFileTypeKey] = [NSNumber numberWithInt:kAudioFileWAVEType];
-        } else {
-            // Fallback on earlier versions
-            ORK_Log_Info("ORKStreamingAudioRecorder can only be used with iOS 11.0 or above.");
-        }
-        
-        AVAudioFile *mixerOutputFile = [[AVAudioFile alloc] initForWriting:audiourl settings:modifiedSettings error:&error];
-        if (error) {
-            [self finishRecordingWithError:error];
-            return;
-        }
-        
-        [inputnode installTapOnBus:0 bufferSize:1024 format:recordingFormat block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
-            id<ORKStreamingAudioResultDelegate> delegate = (id<ORKStreamingAudioResultDelegate>)self.delegate;
-            NSError *recordingError;
-            [mixerOutputFile writeFromBuffer:buffer error:&recordingError];
-            if (recordingError) {
-                [self finishRecordingWithError:recordingError];
-                return;
-            }
-            
-            if (delegate && [delegate respondsToSelector:@selector(audioAvailable:)]) {
-                [delegate audioAvailable:buffer];
-            }
-        }];
-        
-        [_audioEngine prepare];
-        [_audioEngine startAndReturnError:&error];
-        if (error != nil) {
-            [self finishRecordingWithError:error];
-            return;
-        }
-    }
-    
+//    if (self.outputDirectory == nil) {
+//        @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"StreamingAudioRecorder requires an output directory" userInfo:nil];
+//    }
+//    if (!_audioEngine)
+//    {
+//        NSError *error = nil;
+//        
+//        if (![self recreateFileWithError:&error]) {
+//            [self finishRecordingWithError:error];
+//            return;
+//        }
+//        
+//        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+//        _savedSessionCategory = audioSession.category;
+//        if (![audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:&error]) {
+//            [self finishRecordingWithError:error];
+//            return;
+//        }
+//        [audioSession setMode:AVAudioSessionModeMeasurement error:&error];
+//        if (error) {
+//            [self finishRecordingWithError:error];
+//            return;
+//        }
+//        [audioSession setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error];
+//        if (error) {
+//            [self finishRecordingWithError:error];
+//            return;
+//        }
+//        
+//        ORK_Log_Debug("Create audioEngine recorder %p", self);
+//        
+//        _audioEngine = [[AVAudioEngine alloc] init];
+//        AVAudioInputNode *inputnode = _audioEngine.inputNode;
+//        AVAudioFormat *recordingFormat = [inputnode inputFormatForBus:0];
+//        
+//        NSURL *audiourl = [self recordingFileURL];
+//        
+//        // Update the file type to be written to the file
+//        NSMutableDictionary *modifiedSettings = [NSMutableDictionary dictionaryWithDictionary:[recordingFormat settings]];
+//        if (@available(iOS 11.0, *)) {
+//            modifiedSettings[AVAudioFileTypeKey] = [NSNumber numberWithInt:kAudioFileWAVEType];
+//        } else {
+//            // Fallback on earlier versions
+//            ORK_Log_Info("ORKStreamingAudioRecorder can only be used with iOS 11.0 or above.");
+//        }
+//        
+//        AVAudioFile *mixerOutputFile = [[AVAudioFile alloc] initForWriting:audiourl settings:modifiedSettings error:&error];
+//        if (error) {
+//            [self finishRecordingWithError:error];
+//            return;
+//        }
+//        
+//        [inputnode installTapOnBus:0 bufferSize:1024 format:recordingFormat block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
+//            id<ORKStreamingAudioResultDelegate> delegate = (id<ORKStreamingAudioResultDelegate>)self.delegate;
+//            NSError *recordingError;
+//            [mixerOutputFile writeFromBuffer:buffer error:&recordingError];
+//            if (recordingError) {
+//                [self finishRecordingWithError:recordingError];
+//                return;
+//            }
+//            
+//            if (delegate && [delegate respondsToSelector:@selector(audioAvailable:)]) {
+//                [delegate audioAvailable:buffer];
+//            }
+//        }];
+//        
+//        [_audioEngine prepare];
+//        [_audioEngine startAndReturnError:&error];
+//        if (error != nil) {
+//            [self finishRecordingWithError:error];
+//            return;
+//        }
+//    }
+//    
     [super start];
     
 }

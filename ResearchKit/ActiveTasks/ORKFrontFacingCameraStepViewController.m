@@ -185,111 +185,111 @@
 
 - (void)startSession
 {
-    _captureSession = [AVCaptureSession new];
-    
-    _frontCameraCaptureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
-    
-    if (_frontCameraCaptureDevice)
-    {
-        NSError *error = nil;
-        
-        AVCaptureDevice *captureAudioDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
-        AVCaptureDeviceInput *deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:_frontCameraCaptureDevice error:&error];
-        AVCaptureDeviceInput *audioInput = [AVCaptureDeviceInput deviceInputWithDevice:captureAudioDevice error:&error];
-        [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVideoRecording options:0 error:&error];
-        
-        if (error) {
-            [self handleError:[NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{NSLocalizedDescriptionKey:ORKLocalizedString(@"CAPTURE_ERROR_CAMERA_NOT_FOUND", nil)}]];
-            return;
-        }
-        
-        [_captureSession beginConfiguration];
-        
-        if ([_captureSession canAddInput:deviceInput]) {
-            [_captureSession addInput:deviceInput];
-        }
-        
-        if ([_captureSession canSetSessionPreset:AVCaptureSessionPreset640x480]) {
-            [_captureSession setSessionPreset:AVCaptureSessionPreset640x480];
-        }
-        
-        if ([_captureSession canAddInput:audioInput]) {
-            [_captureSession addInput:audioInput];
-        }
-        
-        _movieFileOutput = [AVCaptureMovieFileOutput new];
-        if ([_captureSession canAddOutput:_movieFileOutput]) {
-            [_captureSession addOutput:_movieFileOutput];
-            AVCaptureConnection *captureConnection = [_movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
-            
-            if (captureConnection && [captureConnection isVideoStabilizationSupported]) {
-                captureConnection.preferredVideoStabilizationMode = AVCaptureVideoStabilizationModeAuto;
-            }
-        }
-        
-        AVCaptureVideoDataOutput *output = [AVCaptureVideoDataOutput new];
-        
-        NSString* key = (NSString*)kCVPixelBufferPixelFormatTypeKey;
-        NSNumber* value = [NSNumber numberWithUnsignedInt:kCVPixelFormatType_32BGRA];
-        NSDictionary* videoSettings = [NSDictionary dictionaryWithObject:value forKey:key];
-        [output setVideoSettings:videoSettings];
-        output.alwaysDiscardsLateVideoFrames = YES;
-        
-        if ([_captureSession canAddOutput:output]) {
-            [_captureSession addOutput:output];
-        }
-        
-        AVCaptureConnection *connection = [output connectionWithMediaType:AVMediaTypeVideo];
-        if ([connection isVideoOrientationSupported]) {
-            connection.videoOrientation = AVCaptureVideoOrientationPortrait;
-        }
-        
-        if ([connection isVideoMirroringSupported]) {
-            [connection setVideoMirrored:NO];
-        }
-        
-        [_captureSession commitConfiguration];
-        
-        dispatch_queue_attr_t qos = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_USER_INITIATED, -1);
-        dispatch_queue_t recordingQueue = dispatch_queue_create("output.queue", qos);
-        
-        [output setSampleBufferDelegate:self queue:recordingQueue];
-        
-        [_contentView setPreviewLayerWithSession:_captureSession];
-        
-        [_captureSession startRunning];
-    }
-    
-    [_contentView layoutSubviews];
+//    _captureSession = [AVCaptureSession new];
+//
+//    _frontCameraCaptureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
+//
+//    if (_frontCameraCaptureDevice)
+//    {
+//        NSError *error = nil;
+//
+//        AVCaptureDevice *captureAudioDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+//        AVCaptureDeviceInput *deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:_frontCameraCaptureDevice error:&error];
+//        AVCaptureDeviceInput *audioInput = [AVCaptureDeviceInput deviceInputWithDevice:captureAudioDevice error:&error];
+//        [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVideoRecording options:0 error:&error];
+//
+//        if (error) {
+//            [self handleError:[NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{NSLocalizedDescriptionKey:ORKLocalizedString(@"CAPTURE_ERROR_CAMERA_NOT_FOUND", nil)}]];
+//            return;
+//        }
+//
+//        [_captureSession beginConfiguration];
+//
+//        if ([_captureSession canAddInput:deviceInput]) {
+//            [_captureSession addInput:deviceInput];
+//        }
+//
+//        if ([_captureSession canSetSessionPreset:AVCaptureSessionPreset640x480]) {
+//            [_captureSession setSessionPreset:AVCaptureSessionPreset640x480];
+//        }
+//
+//        if ([_captureSession canAddInput:audioInput]) {
+//            [_captureSession addInput:audioInput];
+//        }
+//
+//        _movieFileOutput = [AVCaptureMovieFileOutput new];
+//        if ([_captureSession canAddOutput:_movieFileOutput]) {
+//            [_captureSession addOutput:_movieFileOutput];
+//            AVCaptureConnection *captureConnection = [_movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+//
+//            if (captureConnection && [captureConnection isVideoStabilizationSupported]) {
+//                captureConnection.preferredVideoStabilizationMode = AVCaptureVideoStabilizationModeAuto;
+//            }
+//        }
+//
+//        AVCaptureVideoDataOutput *output = [AVCaptureVideoDataOutput new];
+//
+//        NSString* key = (NSString*)kCVPixelBufferPixelFormatTypeKey;
+//        NSNumber* value = [NSNumber numberWithUnsignedInt:kCVPixelFormatType_32BGRA];
+//        NSDictionary* videoSettings = [NSDictionary dictionaryWithObject:value forKey:key];
+//        [output setVideoSettings:videoSettings];
+//        output.alwaysDiscardsLateVideoFrames = YES;
+//
+//        if ([_captureSession canAddOutput:output]) {
+//            [_captureSession addOutput:output];
+//        }
+//
+//        AVCaptureConnection *connection = [output connectionWithMediaType:AVMediaTypeVideo];
+//        if ([connection isVideoOrientationSupported]) {
+//            connection.videoOrientation = AVCaptureVideoOrientationPortrait;
+//        }
+//
+//        if ([connection isVideoMirroringSupported]) {
+//            [connection setVideoMirrored:NO];
+//        }
+//
+//        [_captureSession commitConfiguration];
+//
+//        dispatch_queue_attr_t qos = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_USER_INITIATED, -1);
+//        dispatch_queue_t recordingQueue = dispatch_queue_create("output.queue", qos);
+//
+//        [output setSampleBufferDelegate:self queue:recordingQueue];
+//
+//        [_contentView setPreviewLayerWithSession:_captureSession];
+//
+//        [_captureSession startRunning];
+//    }
+//
+//    [_contentView layoutSubviews];
 }
 
 - (void)startVideoRecording {
-    if (![_movieFileOutput isRecording]) {
-         
-        AVCaptureConnection *movieFileOutputConnection = [_movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
-        [movieFileOutputConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
-        
-        NSArray<AVVideoCodecType> *availableVideoCodecTypes = _movieFileOutput.availableVideoCodecTypes;
-        
-        if (availableVideoCodecTypes && [availableVideoCodecTypes containsObject:AVVideoCodecTypeHEVC]) {
-            NSString* key = (NSString*)AVVideoCodecKey;
-            NSString* value = (NSString*)AVVideoCodecTypeHEVC;
-            NSDictionary* outputSettings = [NSDictionary dictionaryWithObject:value forKey:key];
-            [_movieFileOutput setOutputSettings:outputSettings forConnection:movieFileOutputConnection];
-        }
-        
-        // Start recording to a temporary file.
-        NSString *tempVideoFilePath = [[NSTemporaryDirectory() stringByAppendingPathComponent:[NSUUID new].UUIDString] stringByAppendingPathExtension:@"mov"];
-        [_movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:tempVideoFilePath] recordingDelegate:self];
-    }
-    
-    [_contentView layoutSubviews];
+//    if (![_movieFileOutput isRecording]) {
+//
+//        AVCaptureConnection *movieFileOutputConnection = [_movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+//        [movieFileOutputConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+//
+//        NSArray<AVVideoCodecType> *availableVideoCodecTypes = _movieFileOutput.availableVideoCodecTypes;
+//
+//        if (availableVideoCodecTypes && [availableVideoCodecTypes containsObject:AVVideoCodecTypeHEVC]) {
+//            NSString* key = (NSString*)AVVideoCodecKey;
+//            NSString* value = (NSString*)AVVideoCodecTypeHEVC;
+//            NSDictionary* outputSettings = [NSDictionary dictionaryWithObject:value forKey:key];
+//            [_movieFileOutput setOutputSettings:outputSettings forConnection:movieFileOutputConnection];
+//        }
+//
+//        // Start recording to a temporary file.
+//        NSString *tempVideoFilePath = [[NSTemporaryDirectory() stringByAppendingPathComponent:[NSUUID new].UUIDString] stringByAppendingPathExtension:@"mov"];
+//        [_movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:tempVideoFilePath] recordingDelegate:self];
+//    }
+//
+//    [_contentView layoutSubviews];
 }
 
 - (void)stopVideoRecording {
-    if (_movieFileOutput && [_movieFileOutput isRecording]) {
-        [_movieFileOutput stopRecording];
-    }
+//    if (_movieFileOutput && [_movieFileOutput isRecording]) {
+//        [_movieFileOutput stopRecording];
+//    }
 }
 
 - (void)submitVideo {

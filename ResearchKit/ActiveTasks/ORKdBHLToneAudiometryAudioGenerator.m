@@ -78,69 +78,69 @@
     int _lastNodeInput;
 }
 
-- (NSNumber *)dbHLtoAmplitude: (double)dbHL atFrequency:(double)frequency;
+//- (NSNumber *)dbHLtoAmplitude: (double)dbHL atFrequency:(double)frequency;
 
 @end
 
 const double ORKdBHLSineWaveToneGeneratorSampleRateDefault = 44100.0f;
 
-static OSStatus ORKdBHLAudioGeneratorRenderTone(void *inRefCon,
-                                                AudioUnitRenderActionFlags *ioActionFlags,
-                                                const AudioTimeStamp         *inTimeStamp,
-                                                UInt32                     inBusNumber,
-                                                UInt32                     inNumberFrames,
-                                                AudioBufferList             *ioData) {
-    // Get the tone parameters out of the view controller
-    ORKdBHLToneAudiometryAudioGenerator *audioGenerator = (__bridge ORKdBHLToneAudiometryAudioGenerator *)inRefCon;
-    double amplitude;
-
-    amplitude = [audioGenerator->_amplitudeGain doubleValue];
-    
-    double theta = audioGenerator->_theta;
-    double theta_increment = 2.0 * M_PI * audioGenerator->_frequency / ORKdBHLSineWaveToneGeneratorSampleRateDefault;
-    
-    double fadeInFactor = audioGenerator->_fadeInFactor;
-    
-    // This is a mono tone generator so we only need the first buffer
-    Float32 *bufferActive    = (Float32 *)ioData->mBuffers[audioGenerator->_activeChannel].mData;
-    Float32 *bufferNonActive = (Float32 *)ioData->mBuffers[1 - audioGenerator->_activeChannel].mData;
-    
-    // Generate the samples
-    for (UInt32 frame = 0; frame < inNumberFrames; frame++) {
-        double bufferValue;
-        
-        bufferValue = sin(theta) * amplitude * pow(10, 2.0 * fadeInFactor - 2);
-        
-        bufferActive[frame] = bufferValue;
-        if (audioGenerator->_playsStereo) {
-            bufferNonActive[frame] = bufferValue;
-        } else {
-            bufferNonActive[frame] = 0;
-        }
-        
-        theta += theta_increment;
-        if (theta > 2.0 * M_PI) {
-            theta -= 2.0 * M_PI;
-        }
-        if (audioGenerator->_rampUp) {
-            fadeInFactor += 1.0 / (ORKdBHLSineWaveToneGeneratorSampleRateDefault * audioGenerator->_fadeInDuration);
-            if (fadeInFactor >= 1) {
-                fadeInFactor = 1;
-            }
-        } else {
-            fadeInFactor -= 1.0 / (ORKdBHLSineWaveToneGeneratorSampleRateDefault * audioGenerator->_fadeInDuration);
-            if (fadeInFactor <= 0) {
-                fadeInFactor = 0;
-            }
-        }
-    }
-    
-    // Store the theta back in the view controller
-    audioGenerator->_theta = theta;
-    audioGenerator->_fadeInFactor = fadeInFactor;
-    
-    return noErr;
-}
+//static OSStatus ORKdBHLAudioGeneratorRenderTone(void *inRefCon,
+//                                                AudioUnitRenderActionFlags *ioActionFlags,
+//                                                const AudioTimeStamp         *inTimeStamp,
+//                                                UInt32                     inBusNumber,
+//                                                UInt32                     inNumberFrames,
+//                                                AudioBufferList             *ioData) {
+//    // Get the tone parameters out of the view controller
+//    ORKdBHLToneAudiometryAudioGenerator *audioGenerator = (__bridge ORKdBHLToneAudiometryAudioGenerator *)inRefCon;
+//    double amplitude;
+//
+//    amplitude = [audioGenerator->_amplitudeGain doubleValue];
+//    
+//    double theta = audioGenerator->_theta;
+//    double theta_increment = 2.0 * M_PI * audioGenerator->_frequency / ORKdBHLSineWaveToneGeneratorSampleRateDefault;
+//    
+//    double fadeInFactor = audioGenerator->_fadeInFactor;
+//    
+//    // This is a mono tone generator so we only need the first buffer
+//    Float32 *bufferActive    = (Float32 *)ioData->mBuffers[audioGenerator->_activeChannel].mData;
+//    Float32 *bufferNonActive = (Float32 *)ioData->mBuffers[1 - audioGenerator->_activeChannel].mData;
+//    
+//    // Generate the samples
+//    for (UInt32 frame = 0; frame < inNumberFrames; frame++) {
+//        double bufferValue;
+//        
+//        bufferValue = sin(theta) * amplitude * pow(10, 2.0 * fadeInFactor - 2);
+//        
+//        bufferActive[frame] = bufferValue;
+//        if (audioGenerator->_playsStereo) {
+//            bufferNonActive[frame] = bufferValue;
+//        } else {
+//            bufferNonActive[frame] = 0;
+//        }
+//        
+//        theta += theta_increment;
+//        if (theta > 2.0 * M_PI) {
+//            theta -= 2.0 * M_PI;
+//        }
+//        if (audioGenerator->_rampUp) {
+//            fadeInFactor += 1.0 / (ORKdBHLSineWaveToneGeneratorSampleRateDefault * audioGenerator->_fadeInDuration);
+//            if (fadeInFactor >= 1) {
+//                fadeInFactor = 1;
+//            }
+//        } else {
+//            fadeInFactor -= 1.0 / (ORKdBHLSineWaveToneGeneratorSampleRateDefault * audioGenerator->_fadeInDuration);
+//            if (fadeInFactor <= 0) {
+//                fadeInFactor = 0;
+//            }
+//        }
+//    }
+//    
+//    // Store the theta back in the view controller
+//    audioGenerator->_theta = theta;
+//    audioGenerator->_fadeInFactor = fadeInFactor;
+//    
+//    return noErr;
+//}
 
 static OSStatus ORKdBHLAudioGeneratorZeroTone(void *inRefCon,
                                              AudioUnitRenderActionFlags *ioActionFlags,
@@ -288,86 +288,86 @@ static OSStatus ORKdBHLAudioGeneratorZeroTone(void *inRefCon,
 }
 
 - (void)play {
-    _amplitudeGain = [self dbHLtoAmplitude:_globaldBHL atFrequency:_frequency];
-    AURenderCallbackStruct renderCallbackStruct;
-    renderCallbackStruct.inputProcRefCon = (__bridge void *)(self);
-    renderCallbackStruct.inputProc = ORKdBHLAudioGeneratorRenderTone;
-    _lastNodeInput += 1;
-    int connect = 0;
-    int disconnect = 0;
-    if ((_lastNodeInput % 2) == 0) {
-        connect = 1;
-        disconnect = 2;
-    } else {
-        connect = 2;
-        disconnect = 1;
-    }
-    AUGraphDisconnectNodeInput(_mGraph, _mixerNode, disconnect);
-    AUGraphSetNodeInputCallback(_mGraph, _mixerNode, connect, &renderCallbackStruct);
-    AUGraphUpdate(_mGraph, NULL);
+//    _amplitudeGain = [self dbHLtoAmplitude:_globaldBHL atFrequency:_frequency];
+//    AURenderCallbackStruct renderCallbackStruct;
+//    renderCallbackStruct.inputProcRefCon = (__bridge void *)(self);
+//    renderCallbackStruct.inputProc = ORKdBHLAudioGeneratorRenderTone;
+//    _lastNodeInput += 1;
+//    int connect = 0;
+//    int disconnect = 0;
+//    if ((_lastNodeInput % 2) == 0) {
+//        connect = 1;
+//        disconnect = 2;
+//    } else {
+//        connect = 2;
+//        disconnect = 1;
+//    }
+//    AUGraphDisconnectNodeInput(_mGraph, _mixerNode, disconnect);
+//    AUGraphSetNodeInputCallback(_mGraph, _mixerNode, connect, &renderCallbackStruct);
+//    AUGraphUpdate(_mGraph, NULL);
 }
 
 - (void)stop {
-    if (_mGraph) {
-        _rampUp = NO;
-        int nodeInput = (_lastNodeInput % 2) + 1;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_fadeInDuration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (_mGraph) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    AUGraphDisconnectNodeInput(_mGraph, _mixerNode, nodeInput);
-                    AUGraphUpdate(_mGraph, NULL);
-                }); 
-            }
-        });
-    }
+//    if (_mGraph) {
+//        _rampUp = NO;
+//        int nodeInput = (_lastNodeInput % 2) + 1;
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_fadeInDuration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            if (_mGraph) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    AUGraphDisconnectNodeInput(_mGraph, _mixerNode, nodeInput);
+//                    AUGraphUpdate(_mGraph, NULL);
+//                });
+//            }
+//        });
+//    }
 }
 
 - (double)dBToAmplitude:(double)dB {
     return (powf(10, 0.05 * dB));
 }
 
-- (float)getCurrentSystemVolume {
-    return [[AVAudioSession sharedInstance] outputVolume];
-}
+//- (float)getCurrentSystemVolume {
+//    return [[AVAudioSession sharedInstance] outputVolume];
+//}
 
 
-- (NSNumber *)dbHLtoAmplitude: (double)dbHL atFrequency:(double)frequency {
-    NSDecimalNumber *dBSPL =  [NSDecimalNumber decimalNumberWithString:_sensitivityPerFrequency[[NSString stringWithFormat:@"%.0f",frequency]]];
-    
-    // get current volume
-    float currentVolume = [self getCurrentSystemVolume];
-    
-    currentVolume = (int)(currentVolume / 0.0625) * 0.0625;
-    
-    // check in volume curve table for offset
-    NSDecimalNumber *offsetDueToVolume = [NSDecimalNumber decimalNumberWithString:_volumeCurve[[NSString stringWithFormat:@"%.4f",currentVolume]]];
-    
-    NSDecimalNumber *updated_dBSPLForVolumeCurve = [dBSPL decimalNumberByAdding:offsetDueToVolume];
-    
-    NSDecimalNumber *dBFSCalibration = [NSDecimalNumber decimalNumberWithString:@"30"];
-    
-    NSDecimalNumber *updated_dBSPLFor_dBFS = [updated_dBSPLForVolumeCurve decimalNumberByAdding:dBFSCalibration];
-    
-    NSDecimalNumber *baselinedBSPL = [NSDecimalNumber decimalNumberWithString:_retspl[[NSString stringWithFormat:@"%.0f",frequency]]];
-    
-    NSDecimalNumber *tempdBHL = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%f", dbHL]];
-    NSDecimalNumber *attenuationOffset = [baselinedBSPL decimalNumberByAdding:tempdBHL];
-
-    NSDecimalNumber *attenuation = [attenuationOffset decimalNumberBySubtracting:updated_dBSPLFor_dBFS];
-
-    // if the signal starts clipping
-    if ([attenuation doubleValue] >= -1) {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(toneWillStartClipping)]) {
-            [self.delegate toneWillStartClipping];
-            return nil;
-        }
-    }
-    
-    double linearAttenuation = [self dBToAmplitude:attenuation.doubleValue];
-    
-    return [NSNumber numberWithDouble:linearAttenuation];
-    
-}
+//- (NSNumber *)dbHLtoAmplitude: (double)dbHL atFrequency:(double)frequency {
+//    NSDecimalNumber *dBSPL =  [NSDecimalNumber decimalNumberWithString:_sensitivityPerFrequency[[NSString stringWithFormat:@"%.0f",frequency]]];
+//    
+//    // get current volume
+//    float currentVolume = [self getCurrentSystemVolume];
+//    
+//    currentVolume = (int)(currentVolume / 0.0625) * 0.0625;
+//    
+//    // check in volume curve table for offset
+//    NSDecimalNumber *offsetDueToVolume = [NSDecimalNumber decimalNumberWithString:_volumeCurve[[NSString stringWithFormat:@"%.4f",currentVolume]]];
+//    
+//    NSDecimalNumber *updated_dBSPLForVolumeCurve = [dBSPL decimalNumberByAdding:offsetDueToVolume];
+//    
+//    NSDecimalNumber *dBFSCalibration = [NSDecimalNumber decimalNumberWithString:@"30"];
+//    
+//    NSDecimalNumber *updated_dBSPLFor_dBFS = [updated_dBSPLForVolumeCurve decimalNumberByAdding:dBFSCalibration];
+//    
+//    NSDecimalNumber *baselinedBSPL = [NSDecimalNumber decimalNumberWithString:_retspl[[NSString stringWithFormat:@"%.0f",frequency]]];
+//    
+//    NSDecimalNumber *tempdBHL = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%f", dbHL]];
+//    NSDecimalNumber *attenuationOffset = [baselinedBSPL decimalNumberByAdding:tempdBHL];
+//
+//    NSDecimalNumber *attenuation = [attenuationOffset decimalNumberBySubtracting:updated_dBSPLFor_dBFS];
+//
+//    // if the signal starts clipping
+//    if ([attenuation doubleValue] >= -1) {
+//        if (self.delegate && [self.delegate respondsToSelector:@selector(toneWillStartClipping)]) {
+//            [self.delegate toneWillStartClipping];
+//            return nil;
+//        }
+//    }
+//    
+//    double linearAttenuation = [self dBToAmplitude:attenuation.doubleValue];
+//    
+//    return [NSNumber numberWithDouble:linearAttenuation];
+//    
+//}
 
 @end
 

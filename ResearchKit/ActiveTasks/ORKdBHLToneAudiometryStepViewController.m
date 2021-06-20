@@ -214,21 +214,21 @@
     ORKStepResult *sResult = [super result];
     // "Now" is the end time of the result, which is either actually now,
     // or the last time we were in the responder chain.
-    NSDate *now = sResult.endDate;
+//    NSDate *now = sResult.endDate;
     
-    NSMutableArray *results = [NSMutableArray arrayWithArray:sResult.results];
+//    NSMutableArray *results = [NSMutableArray arrayWithArray:sResult.results];
     
-    ORKdBHLToneAudiometryResult *toneResult = [[ORKdBHLToneAudiometryResult alloc] initWithIdentifier:self.step.identifier];
-    toneResult.startDate = sResult.startDate;
-    toneResult.endDate = now;
-    toneResult.samples = [_arrayOfResultSamples copy];
-    toneResult.outputVolume = [AVAudioSession sharedInstance].outputVolume;
-    toneResult.headphoneType = self.dBHLToneAudiometryStep.headphoneType;
-    toneResult.tonePlaybackDuration = [self dBHLToneAudiometryStep].toneDuration;
-    toneResult.postStimulusDelay = [self dBHLToneAudiometryStep].postStimulusDelay;
-    [results addObject:toneResult];
-    
-    sResult.results = [results copy];
+//    ORKdBHLToneAudiometryResult *toneResult = [[ORKdBHLToneAudiometryResult alloc] initWithIdentifier:self.step.identifier];
+//    toneResult.startDate = sResult.startDate;
+//    toneResult.endDate = now;
+//    toneResult.samples = [_arrayOfResultSamples copy];
+//    toneResult.outputVolume = [AVAudioSession sharedInstance].outputVolume;
+//    toneResult.headphoneType = self.dBHLToneAudiometryStep.headphoneType;
+//    toneResult.tonePlaybackDuration = [self dBHLToneAudiometryStep].toneDuration;
+//    toneResult.postStimulusDelay = [self dBHLToneAudiometryStep].postStimulusDelay;
+//    [results addObject:toneResult];
+//    
+//    sResult.results = [results copy];
     
     return sResult;
 }

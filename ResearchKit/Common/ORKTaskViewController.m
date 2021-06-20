@@ -386,20 +386,20 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 
 - (void)requestAudioRecordingAccessWithHandler:(void (^)(BOOL success))handler {
     NSParameterAssert(handler != nil);
-    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            handler(granted);
-        });
-    }];
+//    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            handler(granted);
+//        });
+//    }];
 }
 
 - (void)requestCameraAccessWithHandler:(void (^)(BOOL success))handler {
     NSParameterAssert(handler != nil);
-    [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            handler(granted);
-        });
-    }];
+//    [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            handler(granted);
+//        });
+//    }];
 }
 
 //- (void)requestLocationAccessWithHandler:(void (^)(BOOL success))handler {

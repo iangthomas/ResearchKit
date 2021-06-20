@@ -126,10 +126,10 @@
 }
 
 - (void)saveAudioSession {
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    _savedSessionCategory = audioSession.category;
-    _savedSessionMode = audioSession.mode;
-    _savedSessionCategoryOptions = audioSession.categoryOptions;
+//    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+//    _savedSessionCategory = audioSession.category;
+//    _savedSessionMode = audioSession.mode;
+//    _savedSessionCategoryOptions = audioSession.categoryOptions;
 }
 
 - (void)setNavigationFooterView {
@@ -199,38 +199,38 @@
 //}
 
 - (void)configureAudioSession {
-    NSError *error = nil;
+//    NSError *error = nil;
     
     // Stop any existing audio
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:&error];
-    if (error) {
-        ORK_Log_Error("Setting AVAudioSessionCategory failed with error message: \"%@\"", error.localizedDescription);
-    }
-    
-    [[AVAudioSession sharedInstance] setActive:YES error:&error];
-    if (error) {
-        ORK_Log_Error("Activating AVAudioSession failed with error message: \"%@\"", error.localizedDescription);
-    }
-    
-    // Force input/output from iOS device
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeMeasurement options:AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionMixWithOthers | AVAudioSessionCategoryOptionAllowBluetoothA2DP error:&error];
-    if (error) {
-        ORK_Log_Error("Setting AVAudioSessionCategory failed with error message: \"%@\"", error.localizedDescription);
-    }
+//    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:&error];
+//    if (error) {
+//        ORK_Log_Error("Setting AVAudioSessionCategory failed with error message: \"%@\"", error.localizedDescription);
+//    }
+//
+//    [[AVAudioSession sharedInstance] setActive:YES error:&error];
+//    if (error) {
+//        ORK_Log_Error("Activating AVAudioSession failed with error message: \"%@\"", error.localizedDescription);
+//    }
+//
+//    // Force input/output from iOS device
+//    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeMeasurement options:AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionMixWithOthers | AVAudioSessionCategoryOptionAllowBluetoothA2DP error:&error];
+//    if (error) {
+//        ORK_Log_Error("Setting AVAudioSessionCategory failed with error message: \"%@\"", error.localizedDescription);
+//    }
     
     // Override Output (and Input) to use built-in mic and speaker.
     // We need to make sure audio output is to the Headphones and Audio Input is uing the built-in mic.
     // Although this forces both to the built-in mic AND Speaker, we need to also override the speaker.
-    [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
-    if (error)
-    {
-        ORK_Log_Error("Setting AVAudioSessionPortOverrideSpeaker failed with error message: \"%@\"", error.localizedDescription);
-    }
-    
-    [[AVAudioSession sharedInstance] setActive:YES error:&error];
-    if (error) {
-        ORK_Log_Error("Activating AVAudioSession failed with error message: \"%@\"", error.localizedDescription);
-    }
+//    [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
+//    if (error)
+//    {
+//        ORK_Log_Error("Setting AVAudioSessionPortOverrideSpeaker failed with error message: \"%@\"", error.localizedDescription);
+//    }
+//
+//    [[AVAudioSession sharedInstance] setActive:YES error:&error];
+//    if (error) {
+//        ORK_Log_Error("Activating AVAudioSession failed with error message: \"%@\"", error.localizedDescription);
+//    }
 }
 
 - (void)configureEQ {
@@ -281,66 +281,66 @@
     // Since we are killing all audio when configuring the session, here we can make a safe assumption that if VoiceOver is running, allow the user to continue even if the secondaryAudioShouldBeSilencedHint is YES.
     // If VoiceOver is not running, we can still gate based on the secondaryAudioShouldBeSilencedHint.
     
-    BOOL otherAudioIsProhibitingMeasurement = [[AVAudioSession sharedInstance] secondaryAudioShouldBeSilencedHint] && !UIAccessibilityIsVoiceOverRunning();
-    
-    if (!_audioEngine.isRunning && !otherAudioIsProhibitingMeasurement) {
-        [_eqUnit installTapOnBus:0
-                      bufferSize:_bufferSize
-                          format:_inputNodeOutputFormat
-                           block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
-                               if ([AVAudioSession sharedInstance].recordPermission == AVAudioSessionRecordPermissionGranted) {
-                                   if (buffer.frameLength != _bufferSize) {
-                                       _bufferSize = buffer.frameLength;
-                                   }
-                                   int sampleCount = _samplingInterval * _countToFetch;
-                                   float rms = 0.0;
-                                   for (int i = 0; i < buffer.frameLength; i++) {
-                                       float value = [@(buffer.floatChannelData[0][i]) floatValue];
-                                       rms +=  value * value;
-                                   }
-                                   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                                       [_rmsBuffer addObject:@(rms)];
-                                       
-                                       // perform averaging based on capture interval
-                                       if (_rmsBuffer.count >= sampleCount + 1) {
-                                           float rmsSum = 0.0;
-                                           int i = sampleCount;
-                                           NSUInteger j = _rmsBuffer.count - 1;
-                                           while (i>0) {
-                                               rmsSum += [_rmsBuffer[j] floatValue];
-                                               i --;
-                                               j --;
-                                           }
-                                           _rmsData = rmsSum/_samplingInterval;
-                                           float calValue = _sensitivityOffset;
-                                           _spl = (20 * log10f(sqrtf(_rmsData/(float)_sampleRate))) - calValue + 94;
-                                           [_recordedSamples addObject:[NSNumber numberWithFloat:_spl]];
-                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                               [self.environmentSPLMeterContentView setProgressCircle:(_spl/_thresholdValue)];
-                                           });
-                                           [self evaluateThreshold:_spl];
-                                           [_rmsBuffer removeAllObjects];
-                                       }
-                                       dispatch_semaphore_signal(_semaphoreRms);
-                                   });
-                                   dispatch_semaphore_wait(_semaphoreRms, DISPATCH_TIME_FOREVER);
-                               } else if ([AVAudioSession sharedInstance].recordPermission == AVAudioSessionRecordPermissionDenied) {
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       [_eqUnit removeTapOnBus:0];
-                                       [_audioEngine stop];
-                                       [_rmsBuffer removeAllObjects];
-                                   });
-                               }
-                           }];
-        if (!_audioEngine.isRunning && !otherAudioIsProhibitingMeasurement) {
-            NSError *error = nil;
-            [_audioEngine startAndReturnError:&error];
-        } else {
-            [_eqUnit removeTapOnBus:0];
-            [_audioEngine stop];
-            [_rmsBuffer removeAllObjects];
-        }
-    }
+//    BOOL otherAudioIsProhibitingMeasurement = [[AVAudioSession sharedInstance] secondaryAudioShouldBeSilencedHint] && !UIAccessibilityIsVoiceOverRunning();
+//
+//    if (!_audioEngine.isRunning && !otherAudioIsProhibitingMeasurement) {
+//        [_eqUnit installTapOnBus:0
+//                      bufferSize:_bufferSize
+//                          format:_inputNodeOutputFormat
+//                           block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
+//                               if ([AVAudioSession sharedInstance].recordPermission == AVAudioSessionRecordPermissionGranted) {
+//                                   if (buffer.frameLength != _bufferSize) {
+//                                       _bufferSize = buffer.frameLength;
+//                                   }
+//                                   int sampleCount = _samplingInterval * _countToFetch;
+//                                   float rms = 0.0;
+//                                   for (int i = 0; i < buffer.frameLength; i++) {
+//                                       float value = [@(buffer.floatChannelData[0][i]) floatValue];
+//                                       rms +=  value * value;
+//                                   }
+//                                   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//                                       [_rmsBuffer addObject:@(rms)];
+//
+//                                       // perform averaging based on capture interval
+//                                       if (_rmsBuffer.count >= sampleCount + 1) {
+//                                           float rmsSum = 0.0;
+//                                           int i = sampleCount;
+//                                           NSUInteger j = _rmsBuffer.count - 1;
+//                                           while (i>0) {
+//                                               rmsSum += [_rmsBuffer[j] floatValue];
+//                                               i --;
+//                                               j --;
+//                                           }
+//                                           _rmsData = rmsSum/_samplingInterval;
+//                                           float calValue = _sensitivityOffset;
+//                                           _spl = (20 * log10f(sqrtf(_rmsData/(float)_sampleRate))) - calValue + 94;
+//                                           [_recordedSamples addObject:[NSNumber numberWithFloat:_spl]];
+//                                           dispatch_async(dispatch_get_main_queue(), ^{
+//                                               [self.environmentSPLMeterContentView setProgressCircle:(_spl/_thresholdValue)];
+//                                           });
+//                                           [self evaluateThreshold:_spl];
+//                                           [_rmsBuffer removeAllObjects];
+//                                       }
+//                                       dispatch_semaphore_signal(_semaphoreRms);
+//                                   });
+//                                   dispatch_semaphore_wait(_semaphoreRms, DISPATCH_TIME_FOREVER);
+//                               } else if ([AVAudioSession sharedInstance].recordPermission == AVAudioSessionRecordPermissionDenied) {
+//                                   dispatch_async(dispatch_get_main_queue(), ^{
+//                                       [_eqUnit removeTapOnBus:0];
+//                                       [_audioEngine stop];
+//                                       [_rmsBuffer removeAllObjects];
+//                                   });
+//                               }
+//                           }];
+//        if (!_audioEngine.isRunning && !otherAudioIsProhibitingMeasurement) {
+//            NSError *error = nil;
+//            [_audioEngine startAndReturnError:&error];
+//        } else {
+//            [_eqUnit removeTapOnBus:0];
+//            [_audioEngine stop];
+//            [_rmsBuffer removeAllObjects];
+//        }
+//    }
 }
 
 - (void)evaluateThreshold:(float)spl
@@ -369,16 +369,16 @@
 }
 
 - (void)resetAudioSession {
-    NSError *error = nil;
-    [[AVAudioSession sharedInstance] setCategory:_savedSessionCategory mode:_savedSessionMode options:_savedSessionCategoryOptions error:&error];
-    [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:&error];
-    if (error) {
-        ORK_Log_Error("Setting AVAudioSessionCategory failed with error message: \"%@\"", error.localizedDescription);
-    }
-    [[AVAudioSession sharedInstance] setActive:YES error:&error];
-    if (error) {
-        ORK_Log_Error("Activating AVAudioSession failed with error message: \"%@\"", error.localizedDescription);
-    }
+//    NSError *error = nil;
+//    [[AVAudioSession sharedInstance] setCategory:_savedSessionCategory mode:_savedSessionMode options:_savedSessionCategoryOptions error:&error];
+//    [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:&error];
+//    if (error) {
+//        ORK_Log_Error("Setting AVAudioSessionCategory failed with error message: \"%@\"", error.localizedDescription);
+//    }
+//    [[AVAudioSession sharedInstance] setActive:YES error:&error];
+//    if (error) {
+//        ORK_Log_Error("Activating AVAudioSession failed with error message: \"%@\"", error.localizedDescription);
+//    }
 }
 
 - (void)reachedOptimumNoiseLevel {

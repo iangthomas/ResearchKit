@@ -82,79 +82,79 @@
 }
 
 - (void)restoreSavedAudioSessionCategory {
-    if (_savedSessionCategory) {
-        NSError *error;
-        if (![[AVAudioSession sharedInstance] setCategory:_savedSessionCategory error:&error]) {
-            ORK_Log_Error("Failed to restore the audio session category: %@", [error localizedDescription]);
-        }
-        _savedSessionCategory = nil;
-    }
+//    if (_savedSessionCategory) {
+//        NSError *error;
+//        if (![[AVAudioSession sharedInstance] setCategory:_savedSessionCategory error:&error]) {
+//            ORK_Log_Error("Failed to restore the audio session category: %@", [error localizedDescription]);
+//        }
+//        _savedSessionCategory = nil;
+//    }
 }
 
 - (void)start {
-    if (self.outputDirectory == nil) {
-        @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"audioRecorder requires an output directory" userInfo:nil];
-    }
-    // Only create the file when we should actually start recording.
-    if (!_audioRecorder) {
-        
-        NSError *error = nil;
-        NSURL *soundFileURL = [self recordingFileURL];
-        if (![self recreateFileWithError:&error]) {
-            [self finishRecordingWithError:error];
-            return;
-        }
-        
-        
-        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-        _savedSessionCategory = audioSession.category;
-        if (![audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:&error]) {
-            [self finishRecordingWithError:error];
-            return;
-        }
-        
-        ORK_Log_Debug("Create audioRecorder %p", self);
-        _audioRecorder = [[AVAudioRecorder alloc]
-                          initWithURL:soundFileURL
-                          settings:self.recorderSettings
-                          error:&error];
-        if (!_audioRecorder) {
-            [self finishRecordingWithError:error];
-            return;
-        }
-        
-#if !TARGET_IPHONE_SIMULATOR
-        if (!_audioRecorder.recording) {
-            [_audioRecorder prepareToRecord];
-        }
-#endif
-    }
-    
-#if !TARGET_IPHONE_SIMULATOR
-    if (!_audioRecorder.recording) {
-        [_audioRecorder prepareToRecord];
-        [_audioRecorder record];
-    }
-#endif
+//    if (self.outputDirectory == nil) {
+//        @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"audioRecorder requires an output directory" userInfo:nil];
+//    }
+//    // Only create the file when we should actually start recording.
+//    if (!_audioRecorder) {
+//
+//        NSError *error = nil;
+//        NSURL *soundFileURL = [self recordingFileURL];
+//        if (![self recreateFileWithError:&error]) {
+//            [self finishRecordingWithError:error];
+//            return;
+//        }
+//
+//
+//        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+//        _savedSessionCategory = audioSession.category;
+//        if (![audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:&error]) {
+//            [self finishRecordingWithError:error];
+//            return;
+//        }
+//
+//        ORK_Log_Debug("Create audioRecorder %p", self);
+//        _audioRecorder = [[AVAudioRecorder alloc]
+//                          initWithURL:soundFileURL
+//                          settings:self.recorderSettings
+//                          error:&error];
+//        if (!_audioRecorder) {
+//            [self finishRecordingWithError:error];
+//            return;
+//        }
+//
+//#if !TARGET_IPHONE_SIMULATOR
+//        if (!_audioRecorder.recording) {
+//            [_audioRecorder prepareToRecord];
+//        }
+//#endif
+//    }
+//
+//#if !TARGET_IPHONE_SIMULATOR
+//    if (!_audioRecorder.recording) {
+//        [_audioRecorder prepareToRecord];
+//        [_audioRecorder record];
+//    }
+//#endif
     [super start];
     
 }
 
 - (void)stop {
-    if (!_audioRecorder) {
-        // Error has already been returned.
-        return;
-    }
-    
-    [self doStopRecording];
-    
-    NSURL *fileUrl = [self recordingFileURL];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[[self recordingFileURL] path]]) {
-        fileUrl = nil;
-    }
-    
-    [self reportFileResultWithFile:fileUrl error:nil];
-    
+//    if (!_audioRecorder) {
+//        // Error has already been returned.
+//        return;
+//    }
+//    
+//    [self doStopRecording];
+//    
+//    NSURL *fileUrl = [self recordingFileURL];
+//    if (![[NSFileManager defaultManager] fileExistsAtPath:[[self recordingFileURL] path]]) {
+//        fileUrl = nil;
+//    }
+//    
+//    [self reportFileResultWithFile:fileUrl error:nil];
+//    
     [super stop];
 }
 

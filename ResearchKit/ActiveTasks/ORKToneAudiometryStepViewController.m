@@ -141,26 +141,26 @@
     [self.audioGenerator stop];
 }
 
-- (ORKStepResult *)result {
-    ORKStepResult *sResult = [super result];
-    
-    // "Now" is the end time of the result, which is either actually now,
-    // or the last time we were in the responder chain.
-    NSDate *now = sResult.endDate;
-    
-    NSMutableArray *results = [NSMutableArray arrayWithArray:sResult.results];
-    
-    ORKToneAudiometryResult *toneResult = [[ORKToneAudiometryResult alloc] initWithIdentifier:self.step.identifier];
-    toneResult.startDate = sResult.startDate;
-    toneResult.endDate = now;
-    toneResult.samples = [self.samples copy];
-    toneResult.outputVolume = @([AVAudioSession sharedInstance].outputVolume);
-    
-    [results addObject:toneResult];
-    sResult.results = [results copy];
-    
-    return sResult;
-}
+//- (ORKStepResult *)result {
+//    ORKStepResult *sResult = [super result];
+//    
+//    // "Now" is the end time of the result, which is either actually now,
+//    // or the last time we were in the responder chain.
+//    NSDate *now = sResult.endDate;
+//    
+//    NSMutableArray *results = [NSMutableArray arrayWithArray:sResult.results];
+//    
+//    ORKToneAudiometryResult *toneResult = [[ORKToneAudiometryResult alloc] initWithIdentifier:self.step.identifier];
+//    toneResult.startDate = sResult.startDate;
+//    toneResult.endDate = now;
+//    toneResult.samples = [self.samples copy];
+//    toneResult.outputVolume = @([AVAudioSession sharedInstance].outputVolume);
+//    
+//    [results addObject:toneResult];
+//    sResult.results = [results copy];
+//    
+//    return sResult;
+//}
 
 - (void)stepDidFinish {
     [super stepDidFinish];

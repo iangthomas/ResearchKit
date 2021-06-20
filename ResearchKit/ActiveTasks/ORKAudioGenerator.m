@@ -213,15 +213,15 @@ static OSStatus ORKAudioGeneratorRenderTone(void *inRefCon,
 }
 
 - (void)setupAudioSession {
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    BOOL ok;
-    NSError *setCategoryError = nil;
-    ok = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
-    NSAssert1(ok, @"Audio error %@", setCategoryError);
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleInterruption:)
-                                                 name:AVAudioSessionInterruptionNotification
-                                               object:audioSession];
+//    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+//    BOOL ok;
+//    NSError *setCategoryError = nil;
+//    ok = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
+//    NSAssert1(ok, @"Audio error %@", setCategoryError);
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(handleInterruption:)
+//                                                 name:AVAudioSessionInterruptionNotification
+//                                               object:audioSession];
 }
 
 - (void)createToneUnit {
