@@ -58,9 +58,13 @@
 - (void)setConsentSection:(ORKConsentSection *)consentSection {
     _consentSection = consentSection;
     
-    self.stepTopContentImage = consentSection.image;
+    // TODO: just a note these are Ian's changes to make the image not appear on smaller devices, so that the user does not need to scroll to see the next button.
+    if ([[UIScreen mainScreen] bounds].size.height > 700) {
+        self.stepTopContentImage = consentSection.image;
+    } else {
+        self.stepTopContentImage = nil;
+    }
     self.stepText = [consentSection summary];
-    
 }
 
 @end
